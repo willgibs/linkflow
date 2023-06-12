@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "Linkflow",
+  "version": "1.0.0",
+  "description": "Instantly generate a page-specific sitemap, export to CSV, or scan any webpage for broken links with a single click.",
+  "author": "Will Gibson",
+  "permissions": ["tabs", "scripting"],
+  "host_permissions": ["*://*/*"],
+  "action": {
+    "default_icon": "icon.png",
+    "default_popup": "popup.html",
+    "default_title": "Linkflow"
+  },
+  "icons": {
+    "48": "icon48.png",
+    "128": "icon128.png"
+  }
+}

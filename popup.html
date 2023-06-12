@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pagemap</title>
+  <link rel="stylesheet" href="popup.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="container_generate">
+    <img src="logo.svg" alt="logo" class="logo">
+    <p class="generate_text">Get started by generating a pagemap below.</p>
+    <div class="btn_wrapper">
+      <button class="btn1" id="generate">Generate Pagemap</button>
+      <button class="btn2" id="scan">Scan for Broken Links</button>
+    </div>
+  </div>
+  <div id="container_links" style="display:none">
+    <div class="nav">
+      <img src="back.svg" class="icon" alt="Return" id="back_icon">
+      <button id="export" style="display:none">
+        Export to CSV
+        <img src="arrow.svg" alt="arrow" class="export_icon">
+      </button>
+      <img src="close.svg" class="icon" alt="Close" id="close_icon">
+    </div>
+    <div id="links"></div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
