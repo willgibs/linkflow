@@ -12,18 +12,24 @@
 <body>
   <div id="container_generate">
     <img src="logo.svg" alt="logo" class="logo">
-    <p class="generate_text">Get started by generating a pagemap below.</p>
+    <p class="title_text">Welcome to Linkflow!</p>
+<!--
+    <div class="info_wrapper">
+      <p class="info_text">Scan for Broken Links identifies all link elements with a missing ‘href’ attribute, highlights them and produces a list to quickly navigate to each one on-page.</p>
+      <p class="info_text">Identify All Links displays all link elements on a webpage with link highlighting and generates an exportable CSV list.</p>
+    </div>
+-->
     <div class="btn_wrapper">
-      <button class="btn1" id="generate">Generate Pagemap</button>
-      <button class="btn2" id="scan">Scan for Broken Links</button>
+      <button class="btn" id="generate">Identify All Links</button>
+      <button class="btn" id="scan">Scan for Empty Links</button>
     </div>
   </div>
   <div id="container_links" style="display:none">
     <div class="nav">
       <img src="back.svg" class="icon" alt="Return" id="back_icon">
       <button id="export" style="display:none">
-        Export to CSV
-        <img src="arrow.svg" alt="arrow" class="export_icon">
+        Export as
+        <img src="csv.svg" alt="CSV Icon" class="export_icon">
       </button>
       <img src="close.svg" class="icon" alt="Close" id="close_icon">
     </div>

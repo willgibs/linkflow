@@ -5,7 +5,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
     for (const link of links) {
       // Apply a 2px green border to all links
-      link.style.border = '2px solid green';
+      link.style.border = '4px solid green';
 
       const title = link.innerText || link.textContent || 'undefined';
       const url = link.href;
@@ -44,7 +44,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
       if (isSameBaseURL && (!link.href || isHomePageLink || isEmptyHashLink)) {
         // Apply a 2px red border to broken links
-        link.style.border = '2px solid red';
+        link.style.border = '4px solid red';
 
         const title = link.innerText || link.textContent || 'undefined';
         brokenLinks.push({

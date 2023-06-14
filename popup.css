@@ -1,12 +1,13 @@
 body {
   font-family: 'Inter', sans-serif;
   overflow: hidden;
-  background-color: #03080E;
+  background: #FFFFFF;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 560px;
-  height: 360px;
+  width: 360px;
+  max-width: 560px;
+  height: 300px;
   max-height: 480px;
 }
 
@@ -15,56 +16,43 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 12px;
+  width: 200px;
 }
 
 .logo {
-  width: 70px;
+  width: 50px;
 }
 
-.generate_text {
+.title_text {
   font-size: 16px;
-  color: #CECECE;
+  font-weight: 600;
+  color: #000000;
 }
 
 .btn_wrapper {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 0px;
-  gap: 16px;
+  gap: 12px;
 }
 
-.btn1 {
-  background: #1A2534;
-  border: none;
+.btn {
+  background-color: #FAFAFA;
+  border: 1px solid #2684FF1F;
   border-radius: 8px;
-  color: white;
+  color: black;
   white-space: nowrap;
-  font-size: 16px;
-  cursor: pointer;
+  font-size: 15px;
   padding: 10px 20px;
+  font-weight: 500;
+  width: 100%;
+  cursor: pointer;
   transition: background-color 100ms ease-in-out;
 }
 
-.btn1:hover {
-  background-color: #0045AD;
-}
-
-.btn2 {
-  background: rgba(255, 88, 148, 0.1);
-  border: none;
-  border-radius: 8px;
-  color: white;
-  white-space: nowrap;
-  font-size: 16px;
-  cursor: pointer;
-  padding: 10px 20px;
-  transition: background-color 100ms ease-in-out;
-}
-
-.btn2:hover {
-  background-color: rgba(255, 88, 148, 0.6);
+.btn:hover {
+  background-color: #2684FF1F;
 }
 
 #container_links {
@@ -82,13 +70,13 @@ body {
   align-items: center;
   padding: 0px 14px;
   height: 68px;
-  border-bottom: 1px solid #1A1A1A;
+  border-bottom: 1px solid #F4F4F4;
 }
 
 #export {
-  background-color: #03080E;
+  background-color: #FFFFFF;
   border: none;
-  color: #3183FF;
+  color: #003171;
   text-decoration: none;
   display: none; /* Hidden by default */
   font-size: 16px;
@@ -100,13 +88,12 @@ body {
 }
 
 #export:hover{
-  background-color: #1A2534;
+  background-color: #2684FF1F;
 }
 
 .export_icon {
-  width: 12px;
-  height: 12px;
-  margin-left: 6px;
+  height: 18px;
+  margin-left: 2px;
   vertical-align: middle;
   margin-top: -2px;
 }
@@ -116,12 +103,12 @@ body {
   height: 30px;
   cursor: pointer;
   border-radius: 100%;
-  background-color: #03080E;
+  background-color: #FFFFFF;
   transition: background-color 100ms ease-in-out;
 }
 
 .icon:hover {
-  background-color: #1A2534;
+  background-color: #2684FF1F;
 }
 
 #links {
@@ -143,23 +130,23 @@ body {
   border-radius: 8px;
   align-self: stretch;
   text-decoration: none;
+  overflow: hidden;
   cursor: pointer;
   transition: background-color 50ms ease-in-out;
 }
 
 .link:hover {
-  background-color: #1A2534;
+  background-color: #2684FF1F;
 }
 
 .link_title {
   font-size: 14px;
   font-weight: 600;
-  color: #FFFFFF;
+  color: #000000;
   margin-bottom: 0px;
 }
 
 .link_url {
   font-size: 14px;
   color: #999999;
-  transition: background-color 50ms ease-in-out;
 }
