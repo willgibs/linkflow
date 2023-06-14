@@ -19,9 +19,9 @@ With just one click, you can generate a page-specific sitemap, scan for empty li
 
 ## Download
 
-To download Linkflow from the Chrome Web Store, click [here](https://chrome.google.com/webstore/).
+To download Linkflow from the Chrome Web Store, click [here](https://chrome.google.com/webstore/detail/pagemap/kmgkhecojimncfnoiaajcpekejfklejl).
 
-Note: v1.0 has been submitted for review. The link will be updated upon approval.
+Note: v2.0 has been submitted for review.
 
 ## Local Installation Guide
 
