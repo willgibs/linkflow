@@ -10,18 +10,16 @@ With just one click, you can generate a page-specific sitemap, scan for empty li
 
 ## Features
 
-- Generate Page Sitemap: Instantly generate a visual sitemap of any webpage, neatly listing all the hyperlinks in one consolidated view.
+- Identify All Links: Instantly generate a visual sitemap of any webpage, neatly listing all the hyperlinks in one consolidated view.
 - Scan for Empty Links: Identify all empty links (`href="#"`) on the current webpage. These links are highlighted on the page for easy identification.
-- Export to CSV: Export the generated sitemap data directly into a CSV file for further analysis or for record keeping.
-- Scroll to Link: From the list of empty links, simply click on a link to scroll to its location on the webpage.
+- Export to CSV: Export the generated link data directly into a CSV file for further analysis or for record keeping.
+- Scroll to Link: From any list of links, simply click on a link to scroll to its location on the webpage.
 - Link Highlighting: Links are highlighted in green when a sitemap is generated, and broken links are highlighted in red for easy identification.
 - Ease of Use: All functionalities are available from the extension's popup window, no extra navigation is needed.
 
 ## Download
 
-To download Linkflow from the Chrome Web Store, click [here](https://chrome.google.com/webstore/).
-
-Note: v1.0 has been submitted for review. The link will be updated upon approval.
+Download Linkflow from the Chrome Web Store [here](https://chrome.google.com/webstore/detail/linkflow/kmgkhecojimncfnoiaajcpekejfklejl).
 
 ## Local Installation Guide
 
@@ -37,8 +35,10 @@ To install Linkflow locally:
 
 1. Visit any webpage in Google Chrome.
 2. Click the Linkflow icon in your toolbar.
-3. Click the "Generate Pagemap" button in the popup to generate the visual sitemap.
-4. Once the sitemap is generated, an "Export to CSV" button will appear. Click it to download the sitemap as a CSV file.
+3. Click either the "Identify All Links" or "Scan Empty Links" button in the popup to generate the link list.
+4. Links will be automatically highlighted on-page (green = all links, red = empty link).
+5. Click on any link in the list for the browser to scroll to its position on the page.
+6. Once a link list is generated, an "Export to CSV" button will appear. Click it to download the list as a CSV file.
 
 ## Customization
 
