@@ -1,4 +1,4 @@
-<img src="icon128.png" alt="Linkflow Icon">
+<img src="logo.svg" alt="Linkflow Icon" width="100px">
 
 # Linkflow
 
