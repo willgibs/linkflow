@@ -6,7 +6,7 @@
 
 Linkflow is a Chrome Extension that enhances your web browsing experience by providing instant tools to analyze and optimize your website's links.
 
-With just one click, you can generate a page-specific sitemap, scan for empty links, highlight on-page links, or even export your page's map to a CSV file. Developed with web developers, SEO experts, and general users in mind, Linkflow aims to simplify web navigation and improve website link structures.
+With just one click, you can generate a list of all link elements on a webpage, scan for empty links, highlight on-page links, or even export your page's map to a CSV file.
 
 ## Features
 
