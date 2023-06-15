@@ -55,6 +55,26 @@ body {
   background-color: #2684FF1F;
 }
 
+.help_wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-top: 12px;
+}
+
+.help {
+  font-size: 12px;
+  text-decoration: none;
+  color: #328AFF;
+  transition: color 100ms ease-in-out;
+}
+
+.help:hover {
+  color: #003171;
+}
+
 #container_links {
   width: 100%;
   height: 100%;

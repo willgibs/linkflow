@@ -4,7 +4,7 @@
   "version": "2.1.0",
   "description": "Instantly generate a page-specific sitemap, export to CSV, or scan any webpage for broken links with a single click.",
   "author": "Will Gibson",
-  "permissions": ["tabs", "scripting"],
+  "permissions": ["tabs", "scripting", "https://github.com/*"],
   "host_permissions": ["*://*/*"],
   "action": {
     "default_icon": "icon.png",

@@ -18,7 +18,7 @@ function exportToCSV(sitemap, pageTitle) {
   ]
     .map((row) => row.map((cell) => JSON.stringify(cell)).join(','))
     .join('\n');
-  downloadCSV(csvContent, `PM - ${pageTitle}.csv`);
+  downloadCSV(csvContent, `LF - ${pageTitle}.csv`);
 }
 
 // Scroll to link element
@@ -155,6 +155,11 @@ document.getElementById('back_icon').addEventListener('click', () => {
 
 document.getElementById('close_icon').addEventListener('click', () => {
   window.close();
+});
+
+document.querySelector('.help').addEventListener('click', (e) => {
+  e.preventDefault();
+  chrome.tabs.create({ url: e.target.href });
 });
 
 let sitemapData = [];
