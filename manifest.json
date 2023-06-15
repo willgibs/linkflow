@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Linkflow",
+  "name": "Linkflow [Beta]",
   "version": "2.0.0",
   "description": "Instantly generate a page-specific sitemap, export to CSV, or scan any webpage for broken links with a single click.",
   "author": "Will Gibson",

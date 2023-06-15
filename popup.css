@@ -74,9 +74,9 @@ body {
 }
 
 #export {
-  background-color: #FFFFFF;
-  border: none;
-  color: #003171;
+  background-color: #FAFAFA;
+  border: 1px solid #2684FF1F;
+  color: #black;
   text-decoration: none;
   display: none; /* Hidden by default */
   font-size: 16px;
