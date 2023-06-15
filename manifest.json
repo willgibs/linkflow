@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Linkflow",
   "version": "2.1.0",
-  "description": "Instantly generate a page-specific sitemap, export to CSV, or scan any webpage for broken links with a single click.",
+  "description": "Instantly analyze all links on a webpage, scan for broken links, or export all data with a single click.",
   "author": "Will Gibson",
   "permissions": ["tabs", "scripting", "https://github.com/*"],
   "host_permissions": ["*://*/*"],
