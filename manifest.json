@@ -4,7 +4,7 @@
   "version": "2.1.0",
   "description": "Instantly analyze all links on a webpage, scan for broken links, or export all data with a single click.",
   "author": "Will Gibson",
-  "permissions": ["tabs", "scripting", "https://github.com/*"],
+  "permissions": ["tabs", "scripting"],
   "host_permissions": ["*://*/*"],
   "action": {
     "default_icon": "icon.png",
@@ -14,5 +14,11 @@
   "icons": {
     "48": "icon48.png",
     "128": "icon128.png"
-  }
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "css": ["popup.css"]
+    }
+  ]
 }

@@ -1,38 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pagemap</title>
-  <link rel="stylesheet" href="popup.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
-</head>
-<body>
-  <div id="container_generate">
-    <img src="logo.svg" alt="logo" class="logo">
-    <p class="title_text">Welcome to Linkflow!</p>
-    <div class="btn_wrapper">
-      <button class="btn" id="generate">Identify All Links</button>
-      <button class="btn" id="scan">Scan for Empty Links</button>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Linkflow</title>
+    <link rel="stylesheet" href="popup.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="container_generate" class="shadcn-container">
+      <img src="logo.svg" alt="Linkflow logo" class="logo" />
+      <h1 class="title_text">Linkflow</h1>
+      <p class="subtitle">Analyze and manage links on your webpage</p>
+      <div class="btn_wrapper">
+        <button class="shadcn-button primary" id="generate">
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 15 15"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M8.51194 3.00541C9.18829 2.54594 10.0435 2.53694 10.7279 2.98186C11.4124 3.42678 11.8145 4.15452 11.7892 4.92876C11.7638 5.70301 11.3124 6.40531 10.6047 6.80277L9.89964 7.21664L9.64964 7.36664C8.33301 8.13331 7.66634 8.49997 6.99967 8.49997C6.55801 8.49997 6.07967 8.33331 5.66634 8.099C5.25301 7.86469 4.50361 7.40402 3.50361 6.72869L3.15361 6.49336C2.52627 6.08546 2.12159 5.41864 2.06736 4.68336C2.01314 3.94809 2.31488 3.22574 2.89361 2.73336C3.47234 2.24098 4.26089 2.02623 5.02018 2.14484C5.77948 2.26346 6.44069 2.70346 6.82128 3.34469L7.51194 3.00541H8.51194ZM4.67157 3.51639C4.28807 3.27015 3.8109 3.18348 3.36057 3.27269C2.91024 3.36191 2.52116 3.62013 2.27492 3.98722C2.02868 4.35431 1.94201 4.80041 2.03123 5.22131C2.12044 5.64221 2.37866 6.00736 2.74575 6.23978L3.0839 6.46468L3.50764 6.74752C4.47157 7.39752 5.14624 7.81784 5.4839 8.00105C5.82157 8.18426 6.11337 8.26515 6.39784 8.26515C6.68231 8.26515 7.0839 8.13952 7.60657 7.84858L7.93497 7.65858L8.58697 7.27738C9.0271 7.02193 9.33774 6.58917 9.4499 6.08671C9.56206 5.58425 9.46938 5.05891 9.19424 4.62608C8.91911 4.19325 8.48635 3.88261 7.98389 3.77045C7.48143 3.65829 6.95609 3.75097 6.52326 4.02611L5.82392 4.47136L4.67157 3.51639Z"
+              fill="currentColor"
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+            ></path>
+          </svg>
+          Identify All Links
+        </button>
+        <button class="shadcn-button secondary" id="scan">
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 15 15"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M10 6.5C10 8.433 8.433 10 6.5 10C4.567 10 3 8.433 3 6.5C3 4.567 4.567 3 6.5 3C8.433 3 10 4.567 10 6.5ZM9.30884 10.0159C8.53901 10.6318 7.56251 11 6.5 11C4.01472 11 2 8.98528 2 6.5C2 4.01472 4.01472 2 6.5 2C8.98528 2 11 4.01472 11 6.5C11 7.56251 10.6318 8.53901 10.0159 9.30884L12.8536 12.1464C13.0488 12.3417 13.0488 12.6583 12.8536 12.8536C12.6583 13.0488 12.3417 13.0488 12.1464 12.8536L9.30884 10.0159Z"
+              fill="currentColor"
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+            ></path>
+          </svg>
+          Scan for Empty Links
+        </button>
+      </div>
       <div class="help_wrapper">
-        <a class="help" href="https://github.com/willgibs/Linkflow/blob/main/README.md" target="_blank">User Guide</a>
-        <a class="help" href="mailto:hello@willgib.com?subject=Linkflow">Support</a>
+        <a
+          class="shadcn-link"
+          href="https://github.com/willgibs/Linkflow/blob/main/README.md"
+          target="_blank"
+          >User Guide</a
+        >
+        <a class="shadcn-link" href="mailto:hello@willgib.com?subject=Linkflow"
+          >Support</a
+        >
       </div>
     </div>
-  </div>
-  <div id="container_links" style="display:none">
-    <div class="nav">
-      <img src="back.svg" class="icon" alt="Return" id="back_icon">
-      <button id="export" style="display:none">
-        Export as
-        <img src="csv.svg" alt="CSV Icon" class="export_icon">
-      </button>
-      <img src="close.svg" class="icon" alt="Close" id="close_icon">
+    <div id="container_links" style="display: none">
+      <div id="header" class="shadcn-header">
+        <button id="back_icon" class="shadcn-button">
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 15 15"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M6.85355 3.14645C7.04882 3.34171 7.04882 3.65829 6.85355 3.85355L3.70711 7H12.5C12.7761 7 13 7.22386 13 7.5C13 7.77614 12.7761 8 12.5 8H3.70711L6.85355 11.1464C7.04882 11.3417 7.04882 11.6583 6.85355 11.8536C6.65829 12.0488 6.34171 12.0488 6.14645 11.8536L2.14645 7.85355C1.95118 7.65829 1.95118 7.34171 2.14645 7.14645L6.14645 3.14645C6.34171 2.95118 6.65829 2.95118 6.85355 3.14645Z"
+              fill="currentColor"
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+            ></path>
+          </svg>
+          Back
+        </button>
+        <button id="export" class="shadcn-button">
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 15 15"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M7.50005 1.04999C7.74858 1.04999 7.95005 1.25146 7.95005 1.49999V8.41359L10.1819 6.18179C10.3576 6.00605 10.6425 6.00605 10.8182 6.18179C10.994 6.35753 10.994 6.64245 10.8182 6.81819L7.81825 9.81819C7.64251 9.99392 7.35759 9.99392 7.18185 9.81819L4.18185 6.81819C4.00611 6.64245 4.00611 6.35753 4.18185 6.18179C4.35759 6.00605 4.64251 6.00605 4.81825 6.18179L7.05005 8.41359V1.49999C7.05005 1.25146 7.25152 1.04999 7.50005 1.04999ZM2.5 10C2.77614 10 3 10.2239 3 10.5V12C3 12.5539 3.44565 13 3.99635 13H11.0012C11.5529 13 12 12.5539 12 12V10.5C12 10.2239 12.2239 10 12.5 10C12.7761 10 13 10.2239 13 10.5V12C13 13.1046 12.1082 14 11.0012 14H3.99635C2.89019 14 2 13.1046 2 12V10.5C2 10.2239 2.22386 10 2.5 10Z"
+              fill="currentColor"
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+            ></path>
+          </svg>
+          Export
+        </button>
+        <button id="close_icon" class="shadcn-button">
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 15 15"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M12.8536 2.85355C13.0488 2.65829 13.0488 2.34171 12.8536 2.14645C12.6583 1.95118 12.3417 1.95118 12.1464 2.14645L7.5 6.79289L2.85355 2.14645C2.65829 1.95118 2.34171 1.95118 2.14645 2.14645C1.95118 2.34171 1.95118 2.65829 2.14645 2.85355L6.79289 7.5L2.14645 12.1464C1.95118 12.3417 1.95118 12.6583 2.14645 12.8536C2.34171 13.0488 2.65829 13.0488 2.85355 12.8536L7.5 8.20711L12.1464 12.8536C12.3417 13.0488 12.6583 13.0488 12.8536 12.8536C13.0488 12.6583 13.0488 12.3417 12.8536 12.1464L8.20711 7.5L12.8536 2.85355Z"
+              fill="currentColor"
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+            ></path>
+          </svg>
+          Close
+        </button>
+      </div>
+      <div id="links"></div>
     </div>
-    <div id="links"></div>
-  </div>
-  <script src="popup.js"></script>
-</body>
+    <script src="popup.js"></script>
+  </body>
 </html>
