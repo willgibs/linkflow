@@ -1,46 +1,50 @@
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    sans-serif;
   background: #ffffff;
   margin: 0;
-  padding: 16px;
-  width: 350px;
-  min-height: 400px; /* Set a minimum height */
-  max-height: 600px; /* Set a maximum height */
+  padding: 20px;
+  width: 320px;
+  height: 480px;
   box-sizing: border-box;
-  color: #111827;
+  color: #1c1c1e;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  opacity: 0;
+  animation: fadeIn 0.3s ease-out 0.1s forwards;
 }
 
 .shadcn-container {
   display: flex;
   flex-direction: column;
+  height: 100%;
+}
+
+.header {
+  display: flex;
   align-items: center;
-  gap: 24px;
-  flex-grow: 1;
-  justify-content: center;
-  padding: 24px 0;
+  gap: 8px;
+  margin-bottom: 16px;
 }
 
 .logo {
-  width: 64px;
-  height: 64px;
+  width: 24px;
+  height: 24px;
 }
 
 .title_text {
-  font-size: 32px;
+  font-size: 20px;
   font-weight: 600;
-  color: #111827;
+  color: #1c1c1e;
   margin: 0;
-  letter-spacing: -0.025em;
 }
 
 .subtitle {
-  font-size: 16px;
+  font-size: 15px;
   color: #6b7280;
-  text-align: center;
-  margin: 0;
-  max-width: 80%;
+  margin-bottom: 24px;
+  line-height: 1.4;
 }
 
 .btn_wrapper {
@@ -48,7 +52,7 @@ body {
   flex-direction: column;
   gap: 12px;
   width: 100%;
-  margin-top: 12px;
+  margin-bottom: 20px;
 }
 
 .shadcn-button {
@@ -56,9 +60,9 @@ body {
   align-items: center;
   justify-content: center;
   border-radius: 8px;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
-  padding: 12px 20px;
+  padding: 10px 16px;
   cursor: pointer;
   transition: all 0.2s ease;
   border: 1px solid transparent;
@@ -66,46 +70,96 @@ body {
 }
 
 .shadcn-button svg {
-  margin-right: 12px;
-  width: 20px;
-  height: 20px;
+  margin-right: 8px;
+  width: 16px;
+  height: 16px;
 }
 
 .shadcn-button.primary {
-  background-color: #000000;
+  background-color: #007aff;
   color: white;
 }
 
 .shadcn-button.primary:hover {
-  background-color: #111827;
+  background-color: #0056b3;
 }
 
 .shadcn-button.secondary {
-  background-color: #ffffff;
-  color: #111827;
+  background-color: #f5f5f7;
+  color: #1c1c1e;
   border-color: #e5e7eb;
 }
 
 .shadcn-button.secondary:hover {
-  background-color: #f9fafb;
+  background-color: #e5e5ea;
+}
+
+.quick-guide {
+  background-color: #f8fafc;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.quick-guide h2 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1c1c1e;
+  margin: 0 0 12px;
+}
+
+.guide-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.guide-step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.step-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background-color: #007aff;
+  color: white;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.guide-step p {
+  margin: 0;
+  font-size: 13px;
+  color: #4b5563;
+  line-height: 1.4;
 }
 
 .help_wrapper {
   display: flex;
   justify-content: space-between;
   width: 100%;
-  margin-top: 24px;
+  padding-top: 16px;
+  padding-bottom: 8px;
+  border-top: 1px solid #e5e7eb;
 }
 
 .shadcn-link {
-  font-size: 14px;
+  font-size: 13px;
   text-decoration: none;
-  color: #6b7280;
+  color: #007aff;
   transition: color 0.2s ease;
 }
 
 .shadcn-link:hover {
-  color: #111827;
+  color: #0056b3;
 }
 
 #container_links {
@@ -120,6 +174,7 @@ body {
   padding: 12px 0;
   border-bottom: 1px solid #e5e7eb;
   width: 100%;
+  background-color: #ffffff;
 }
 
 .shadcn-header .shadcn-button {
@@ -128,6 +183,11 @@ body {
   background-color: #f9fafb;
   border: 1px solid #e5e7eb;
   color: #111827;
+  margin-right: 8px; /* Add margin between buttons */
+}
+
+.shadcn-header .shadcn-button:last-child {
+  margin-right: 0; /* Remove margin from the last button */
 }
 
 .shadcn-header .shadcn-button:hover {
@@ -169,21 +229,23 @@ body {
 
 .link {
   display: block;
-  padding: 10px 12px;
+  padding: 12px;
   gap: 2px;
-  border-radius: 6px;
+  border-radius: 8px;
   width: 100%;
   text-decoration: none;
   overflow: hidden;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
   border: 1px solid #e5e7eb;
   box-sizing: border-box;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
+  background-color: #ffffff;
 }
 
 .link:hover {
   background-color: #f9fafb;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .link_title {
@@ -216,4 +278,58 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
+}
+
+.results-context {
+  padding: 16px;
+  background-color: #f8fafc;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.results-context h2 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #374151;
+  margin: 0 0 8px 0;
+}
+
+.results-context p {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.results-context .count {
+  font-weight: 600;
+}
+
+/* Subtle animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.shadcn-container > * {
+  opacity: 0;
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.shadcn-container > *:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.shadcn-container > *:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.shadcn-container > *:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.shadcn-container > *:nth-child(4) {
+  animation-delay: 0.4s;
 }

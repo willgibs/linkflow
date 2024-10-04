@@ -22,19 +22,18 @@ document.addEventListener('DOMContentLoaded', () => {
     downloadCSV(csvContent, `LF - ${pageTitle}.csv`);
   }
 
-  // Handle generate button click event
-  async function onGenerateButtonClick() {
+  // Inject content script and execute action
+  async function injectAndExecute(action) {
     try {
-      const tabs = await chrome.tabs.query({
+      const [tab] = await chrome.tabs.query({
         active: true,
         currentWindow: true,
       });
-      const pageTitle = tabs[0].title;
       await chrome.scripting.executeScript({
-        target: { tabId: tabs[0].id },
+        target: { tabId: tab.id },
         files: ['contentScript.js'],
       });
-      chrome.tabs.sendMessage(tabs[0].id, { action: 'generateSitemap' });
+      chrome.tabs.sendMessage(tab.id, { action: action });
 
       const containerGenerate = document.getElementById('container_generate');
       const containerLinks = document.getElementById('container_links');
@@ -43,9 +42,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const exportButton = document.getElementById('export');
       if (exportButton) {
-        exportButton.style.display = 'inline-flex'; // Changed from 'inline-block' to 'inline-flex'
+        exportButton.style.display = 'inline-flex';
         exportButton.addEventListener('click', () =>
-          exportToCSV(sitemapData, pageTitle)
+          exportToCSV(sitemapData, tab.title)
         );
       }
     } catch (error) {
@@ -53,35 +52,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // Handle generate button click event
+  async function onGenerateButtonClick() {
+    injectAndExecute('generateSitemap');
+  }
+
   // Handle scan button click event
   async function onScanButtonClick() {
-    try {
-      const tabs = await chrome.tabs.query({
-        active: true,
-        currentWindow: true,
-      });
-      const pageTitle = tabs[0].title;
-      await chrome.scripting.executeScript({
-        target: { tabId: tabs[0].id },
-        files: ['contentScript.js'],
-      });
-      chrome.tabs.sendMessage(tabs[0].id, { action: 'scanLinks' });
-
-      const containerGenerate = document.getElementById('container_generate');
-      const containerLinks = document.getElementById('container_links');
-      if (containerGenerate) containerGenerate.style.display = 'none';
-      if (containerLinks) containerLinks.style.display = 'flex';
-
-      const exportButton = document.getElementById('export');
-      if (exportButton) {
-        exportButton.style.display = 'inline-flex'; // Changed from 'inline-block' to 'inline-flex'
-        exportButton.addEventListener('click', () =>
-          exportToCSV(sitemapData, pageTitle)
-        );
-      }
-    } catch (error) {
-      console.error(error);
-    }
+    injectAndExecute('scanLinks');
   }
 
   // Event listener for messages from content script
@@ -91,10 +69,26 @@ document.addEventListener('DOMContentLoaded', () => {
       request.action === 'scannedLinksGenerated'
     ) {
       const linksContainer = document.getElementById('links');
-      if (linksContainer) {
+      const resultsContext = document.getElementById('results_context');
+      if (linksContainer && resultsContext) {
         const sitemapHTML = request.sitemapData.map(generateLinkHTML).join('');
         linksContainer.innerHTML = sitemapHTML;
         sitemapData = request.sitemapData;
+
+        // Add context information
+        if (request.action === 'sitemapGenerated') {
+          resultsContext.innerHTML = `
+            <h2>All Links</h2>
+            <p>Showing <span class="count">${sitemapData.length}</span> links found on the page. Click on a link to highlight it on the webpage.</p>
+          `;
+        } else if (request.action === 'scannedLinksGenerated') {
+          const attentionText =
+            sitemapData.length > 0 ? 'These links may need attention.' : '';
+          resultsContext.innerHTML = `
+            <h2>Empty Links</h2>
+            <p>Showing <span class="count">${sitemapData.length}</span> empty or potentially broken links found on the page. ${attentionText}</p>
+          `;
+        }
 
         // Add click event listeners to the newly created links
         const links = linksContainer.querySelectorAll('.link');
@@ -111,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
           });
         }
       } else {
-        console.error('Links container not found');
+        console.error('Links container or results context not found');
       }
     }
     sendResponse();
@@ -157,9 +151,10 @@ document.addEventListener('DOMContentLoaded', () => {
   let sitemapData = [];
 
   function generateLinkHTML(entry) {
+    const title = entry.title.replace('Broken Link', '').trim();
     return `
       <a href="${entry.url}" target="_self" data-id="${entry.id}" class="link">
-        <div class="link_title">${escapeHtml(entry.title)}</div>
+        <div class="link_title">${escapeHtml(title)}</div>
         <div class="link_url">${escapeHtml(entry.url)}</div>
       </a>
     `;
