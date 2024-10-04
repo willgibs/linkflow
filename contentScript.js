@@ -45,7 +45,9 @@
         ) {
           addModernHighlight(link, 'rgba(239, 68, 68, 0.2)'); // Light red highlight
           createTooltip(link, 'Broken Link');
-          const title = link.innerText || link.textContent || 'undefined';
+          const title = (link.innerText || link.textContent || 'undefined')
+            .replace(/Broken Link/g, '')
+            .trim();
           const id = `link-${btoa(link.href || 'No href attribute')}-${index}`;
           link.id = id;
           return [{ id, title, url: link.href || 'No href attribute' }];

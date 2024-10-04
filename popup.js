@@ -1,29 +1,26 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // Create and download a CSV file
-  function downloadCSV(csv, filename) {
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', filename);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  }
+  const mainView = document.getElementById('main-view');
+  const resultsView = document.getElementById('results-view');
+  const analyzeAllBtn = document.getElementById('analyze-all');
+  const findEmptyBtn = document.getElementById('find-empty');
+  const backBtn = document.getElementById('back-button');
+  const exportBtn = document.getElementById('export-button');
+  const resultsTitle = document.getElementById('results-title');
+  const resultsSummary = document.getElementById('results-summary');
+  const linksList = document.getElementById('links-list');
 
-  // Convert sitemap data to CSV content and trigger download
-  function exportToCSV(sitemap, pageTitle) {
-    const csvContent = [
-      ['Link Title', 'URL'],
-      ...sitemap.map(({ title, url }) => [title, url]),
-    ]
-      .map((row) => row.map((cell) => JSON.stringify(cell)).join(','))
-      .join('\n');
-    downloadCSV(csvContent, `LF - ${pageTitle}.csv`);
-  }
+  let currentAction = '';
+  let sitemapData = [];
 
-  // Inject content script and execute action
-  async function injectAndExecute(action) {
+  analyzeAllBtn.addEventListener('click', () =>
+    executeAction('generateSitemap')
+  );
+  findEmptyBtn.addEventListener('click', () => executeAction('scanLinks'));
+  backBtn.addEventListener('click', showMainView);
+  exportBtn.addEventListener('click', exportToCSV);
+
+  async function executeAction(action) {
+    currentAction = action;
     try {
       const [tab] = await chrome.tabs.query({
         active: true,
@@ -33,131 +30,90 @@ document.addEventListener('DOMContentLoaded', () => {
         target: { tabId: tab.id },
         files: ['contentScript.js'],
       });
-      chrome.tabs.sendMessage(tab.id, { action: action });
-
-      const containerGenerate = document.getElementById('container_generate');
-      const containerLinks = document.getElementById('container_links');
-      if (containerGenerate) containerGenerate.style.display = 'none';
-      if (containerLinks) containerLinks.style.display = 'flex';
-
-      const exportButton = document.getElementById('export');
-      if (exportButton) {
-        exportButton.style.display = 'inline-flex';
-        exportButton.addEventListener('click', () =>
-          exportToCSV(sitemapData, tab.title)
-        );
-      }
+      chrome.tabs.sendMessage(tab.id, { action });
+      showResultsView();
     } catch (error) {
-      console.error(error);
+      console.error('Error executing action:', error);
     }
   }
 
-  // Handle generate button click event
-  async function onGenerateButtonClick() {
-    injectAndExecute('generateSitemap');
+  function showMainView() {
+    mainView.classList.remove('hidden');
+    resultsView.classList.add('hidden');
   }
 
-  // Handle scan button click event
-  async function onScanButtonClick() {
-    injectAndExecute('scanLinks');
+  function showResultsView() {
+    mainView.classList.add('hidden');
+    resultsView.classList.remove('hidden');
   }
 
-  // Event listener for messages from content script
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (
       request.action === 'sitemapGenerated' ||
       request.action === 'scannedLinksGenerated'
     ) {
-      const linksContainer = document.getElementById('links');
-      const resultsContext = document.getElementById('results_context');
-      if (linksContainer && resultsContext) {
-        const sitemapHTML = request.sitemapData.map(generateLinkHTML).join('');
-        linksContainer.innerHTML = sitemapHTML;
-        sitemapData = request.sitemapData;
-
-        // Add context information
-        if (request.action === 'sitemapGenerated') {
-          resultsContext.innerHTML = `
-            <h2>All Links</h2>
-            <p>Showing <span class="count">${sitemapData.length}</span> links found on the page. Click on a link to highlight it on the webpage.</p>
-          `;
-        } else if (request.action === 'scannedLinksGenerated') {
-          const attentionText =
-            sitemapData.length > 0 ? 'These links may need attention.' : '';
-          resultsContext.innerHTML = `
-            <h2>Empty Links</h2>
-            <p>Showing <span class="count">${sitemapData.length}</span> empty or potentially broken links found on the page. ${attentionText}</p>
-          `;
-        }
-
-        // Add click event listeners to the newly created links
-        const links = linksContainer.querySelectorAll('.link');
-        for (const link of links) {
-          link.addEventListener('click', (event) => {
-            event.preventDefault();
-            const id = event.currentTarget.dataset.id;
-            chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-              chrome.tabs.sendMessage(tabs[0].id, {
-                action: 'scrollIntoView',
-                id: id,
-              });
-            });
-          });
-        }
-      } else {
-        console.error('Links container or results context not found');
-      }
+      sitemapData = request.sitemapData;
+      updateResultsView();
     }
     sendResponse();
     return true;
   });
 
-  // Register event handlers
-  const generateButton = document.getElementById('generate');
-  if (generateButton) {
-    generateButton.addEventListener('click', onGenerateButtonClick);
+  function updateResultsView() {
+    const count = sitemapData.length;
+    if (currentAction === 'generateSitemap') {
+      resultsTitle.textContent = 'All Links';
+      resultsSummary.innerHTML = `Found <span class="count">${count}</span> link${
+        count !== 1 ? 's' : ''
+      } on the page.`;
+    } else {
+      resultsTitle.textContent = 'Empty Links';
+      resultsSummary.innerHTML = `Found <span class="count">${count}</span> empty or potentially broken link${
+        count !== 1 ? 's' : ''
+      }.`;
+    }
+    linksList.innerHTML = sitemapData.map(createLinkItem).join('');
+    addLinkListeners();
   }
 
-  const scanButton = document.getElementById('scan');
-  if (scanButton) {
-    scanButton.addEventListener('click', onScanButtonClick);
-  }
-
-  const backIcon = document.getElementById('back_icon');
-  if (backIcon) {
-    backIcon.addEventListener('click', () => {
-      const containerLinks = document.getElementById('container_links');
-      const containerGenerate = document.getElementById('container_generate');
-      if (containerLinks) containerLinks.style.display = 'none';
-      if (containerGenerate) containerGenerate.style.display = 'flex';
-    });
-  }
-
-  const closeIcon = document.getElementById('close_icon');
-  if (closeIcon) {
-    closeIcon.addEventListener('click', () => {
-      window.close();
-    });
-  }
-
-  const helpLinks = document.querySelectorAll('.help');
-  helpLinks.forEach((link) => {
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      chrome.tabs.create({ url: e.target.href });
-    });
-  });
-
-  let sitemapData = [];
-
-  function generateLinkHTML(entry) {
-    const title = entry.title.replace('Broken Link', '').trim();
+  function createLinkItem(link) {
     return `
-      <a href="${entry.url}" target="_self" data-id="${entry.id}" class="link">
-        <div class="link_title">${escapeHtml(title)}</div>
-        <div class="link_url">${escapeHtml(entry.url)}</div>
-      </a>
+      <div class="link-item" data-id="${link.id}">
+        <div class="link-title">${escapeHtml(link.title)}</div>
+        <div class="link-url">${escapeHtml(link.url)}</div>
+      </div>
     `;
+  }
+
+  function addLinkListeners() {
+    linksList.querySelectorAll('.link-item').forEach((item) => {
+      item.addEventListener('click', () => {
+        chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
+          chrome.tabs.sendMessage(tab.id, {
+            action: 'scrollIntoView',
+            id: item.dataset.id,
+          });
+        });
+      });
+    });
+  }
+
+  function exportToCSV() {
+    const csvContent = [
+      ['Link Title', 'URL'],
+      ...sitemapData.map(({ title, url }) => [title, url]),
+    ]
+      .map((row) =>
+        row.map((cell) => `"${cell.replace(/"/g, '""')}"`).join(',')
+      )
+      .join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `linkflow_export_${new Date().toISOString()}.csv`;
+    link.click();
   }
 
   function escapeHtml(unsafe) {
