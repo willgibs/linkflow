@@ -1,50 +1,87 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const mainView = document.getElementById('main-view');
-  const resultsView = document.getElementById('results-view');
-  const analyzeAllBtn = document.getElementById('analyze-all');
-  const findEmptyBtn = document.getElementById('find-empty');
-  const backBtn = document.getElementById('back-button');
-  const exportBtn = document.getElementById('export-button');
-  const resultsTitle = document.getElementById('results-title');
-  const resultsSummary = document.getElementById('results-summary');
-  const linksList = document.getElementById('links-list');
+  const elements = {
+    mainView: document.getElementById('main-view'),
+    resultsView: document.getElementById('results-view'),
+    analyzeAllBtn: document.getElementById('analyze-all'),
+    findEmptyBtn: document.getElementById('find-empty'),
+    backBtn: document.getElementById('back-button'),
+    exportBtn: document.getElementById('export-button'),
+    resultsTitle: document.getElementById('results-title'),
+    resultsSummary: document.getElementById('results-summary'),
+    linksList: document.getElementById('links-list'),
+    categoryFilter: document.getElementById('category-filter'),
+  };
 
   let currentAction = '';
   let sitemapData = [];
 
-  analyzeAllBtn.addEventListener('click', () =>
-    executeAction('generateSitemap')
-  );
-  findEmptyBtn.addEventListener('click', () => executeAction('scanLinks'));
-  backBtn.addEventListener('click', showMainView);
-  exportBtn.addEventListener('click', exportToCSV);
+  const actions = {
+    generateSitemap: () => executeAction('generateSitemap'),
+    scanLinks: () => executeAction('scanLinks'),
+    showMainView,
+    exportToCSV,
+  };
+
+  elements.analyzeAllBtn.addEventListener('click', actions.generateSitemap);
+  elements.findEmptyBtn.addEventListener('click', actions.scanLinks);
+  elements.backBtn.addEventListener('click', actions.showMainView);
+  elements.exportBtn.addEventListener('click', actions.exportToCSV);
+  elements.categoryFilter.addEventListener('change', handleCategoryFilter);
 
   async function executeAction(action) {
     currentAction = action;
+    showLoadingState();
+    sitemapData = [];
+
     try {
       const [tab] = await chrome.tabs.query({
         active: true,
         currentWindow: true,
       });
-      await chrome.scripting.executeScript({
-        target: { tabId: tab.id },
-        files: ['contentScript.js'],
-      });
+      await injectContentScript(tab.id);
       chrome.tabs.sendMessage(tab.id, { action });
-      showResultsView();
     } catch (error) {
       console.error('Error executing action:', error);
+      hideLoadingState();
     }
   }
 
+  async function injectContentScript(tabId) {
+    return new Promise((resolve, reject) => {
+      chrome.tabs.sendMessage(tabId, { action: 'ping' }, (response) => {
+        if (chrome.runtime.lastError) {
+          chrome.scripting.executeScript(
+            { target: { tabId }, files: ['contentScript.js'] },
+            () => resolve()
+          );
+        } else {
+          resolve();
+        }
+      });
+    });
+  }
+
+  function showLoadingState() {
+    document.body.classList.add('results-active');
+    elements.resultsView.style.opacity = '0';
+  }
+
+  function hideLoadingState() {
+    elements.resultsView.style.opacity = '1';
+  }
+
   function showMainView() {
-    mainView.classList.remove('hidden');
-    resultsView.classList.add('hidden');
+    document.body.classList.remove('results-active');
+    elements.mainView.style.display = 'flex';
+    elements.resultsView.style.display = 'none';
+    sitemapData = [];
   }
 
   function showResultsView() {
-    mainView.classList.add('hidden');
-    resultsView.classList.remove('hidden');
+    document.body.classList.add('results-active');
+    elements.mainView.style.display = 'none';
+    elements.resultsView.style.display = 'flex';
+    hideLoadingState();
   }
 
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -53,6 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
       request.action === 'scannedLinksGenerated'
     ) {
       sitemapData = request.sitemapData;
+      showResultsView();
       updateResultsView();
     }
     sendResponse();
@@ -60,53 +98,114 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   function updateResultsView() {
-    const count = sitemapData.length;
-    if (currentAction === 'generateSitemap') {
-      resultsTitle.textContent = 'All Links';
-      resultsSummary.innerHTML = `Found <span class="count">${count}</span> link${
-        count !== 1 ? 's' : ''
-      } on the page.`;
-      linksList.innerHTML = sitemapData
-        .map(createLinkItemWithCategory)
+    const isSitemap = currentAction === 'generateSitemap';
+    elements.resultsTitle.textContent = isSitemap ? 'All Links' : 'Empty Links';
+    elements.categoryFilter.style.display = isSitemap ? 'block' : 'none';
+    if (isSitemap) updateCategoryFilter();
+    renderFilteredLinks(isSitemap);
+  }
+
+  function updateCategoryFilter() {
+    const categories = new Set(sitemapData.map((link) => link.category));
+    elements.categoryFilter.innerHTML =
+      '<option value="all">All Categories</option>' +
+      Array.from(categories)
+        .map(
+          (category) =>
+            `<option value="${category
+              .toLowerCase()
+              .replace(' ', '-')}">${category}</option>`
+        )
         .join('');
-    } else {
-      resultsTitle.textContent = 'Empty Links';
-      resultsSummary.innerHTML = `Found <span class="count">${count}</span> empty or potentially broken link${
-        count !== 1 ? 's' : ''
-      }.`;
-      linksList.innerHTML = sitemapData
-        .map(createLinkItemWithoutCategory)
-        .join('');
+  }
+
+  function handleCategoryFilter(e) {
+    renderFilteredLinks(currentAction === 'generateSitemap', e.target.value);
+  }
+
+  function renderFilteredLinks(withCategory, filter = 'all') {
+    const filteredLinks = sitemapData.filter(
+      (link) =>
+        filter === 'all' ||
+        link.category.toLowerCase().replace(' ', '-') === filter
+    );
+
+    updateLinkCount(filteredLinks.length);
+
+    const fragment = document.createDocumentFragment();
+    const templateWithCategory = document.createElement('template');
+    const templateWithoutCategory = document.createElement('template');
+
+    templateWithCategory.innerHTML = `
+      <div class="link-item" data-id="">
+        <div class="link-title"></div>
+        <div class="link-url"></div>
+        <div class="link-category"></div>
+      </div>
+    `;
+
+    templateWithoutCategory.innerHTML = `
+      <div class="link-item" data-id="">
+        <div class="link-title"></div>
+        <div class="link-url"></div>
+      </div>
+    `;
+
+    const batchSize = 50;
+    let currentIndex = 0;
+
+    function renderBatch() {
+      const endIndex = Math.min(currentIndex + batchSize, filteredLinks.length);
+
+      for (let i = currentIndex; i < endIndex; i++) {
+        const link = filteredLinks[i];
+        const template = withCategory
+          ? templateWithCategory
+          : templateWithoutCategory;
+        const linkElement = template.content.cloneNode(true).firstElementChild;
+
+        linkElement.dataset.id = link.id;
+        linkElement.querySelector('.link-title').textContent = link.title || '';
+        linkElement.querySelector('.link-url').textContent = link.url;
+
+        if (withCategory) {
+          const categoryElement = linkElement.querySelector('.link-category');
+          categoryElement.textContent = link.category;
+          categoryElement.className = `link-category category-${link.category
+            .toLowerCase()
+            .replace(' ', '-')}`;
+        }
+
+        fragment.appendChild(linkElement);
+      }
+
+      elements.linksList.appendChild(fragment);
+      currentIndex = endIndex;
+
+      if (currentIndex < filteredLinks.length) {
+        requestAnimationFrame(renderBatch);
+      } else {
+        addLinkListeners();
+      }
     }
-    addLinkListeners();
+
+    elements.linksList.innerHTML = '';
+    requestAnimationFrame(renderBatch);
   }
 
-  function createLinkItemWithCategory(link) {
-    const categoryClass = `category-${link.category
-      .toLowerCase()
-      .replace(' ', '-')}`;
-    return `
-      <div class="link-item" data-id="${link.id}">
-        <div class="link-title">${escapeHtml(link.title)}</div>
-        <div class="link-url">${escapeHtml(link.url)}</div>
-        <div class="link-category ${categoryClass}">${escapeHtml(
-      link.category
-    )}</div>
-      </div>
-    `;
-  }
-
-  function createLinkItemWithoutCategory(link) {
-    return `
-      <div class="link-item" data-id="${link.id}">
-        <div class="link-title">${escapeHtml(link.title)}</div>
-        <div class="link-url">${escapeHtml(link.url)}</div>
-      </div>
-    `;
+  function updateLinkCount(count) {
+    const isSitemap = currentAction === 'generateSitemap';
+    elements.resultsSummary.innerHTML = `Found <span class="count">${count}</span> ${
+      isSitemap ? 'link' : 'empty or potentially broken link'
+    }${count !== 1 ? 's' : ''} ${
+      elements.categoryFilter.value !== 'all'
+        ? 'in this category'
+        : 'on the page'
+    }.`;
   }
 
   function addLinkListeners() {
-    linksList.querySelectorAll('.link-item').forEach((item) => {
+    elements.linksList.querySelectorAll('.link-item').forEach((item) => {
       item.addEventListener('click', () => {
         chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
           chrome.tabs.sendMessage(tab.id, {
@@ -124,7 +223,7 @@ document.addEventListener('DOMContentLoaded', () => {
       ...sitemapData.map(({ title, url, category }) => [title, url, category]),
     ]
       .map((row) =>
-        row.map((cell) => `"${cell.replace(/"/g, '""')}"`).join(',')
+        row.map((cell) => `"${(cell || '').replace(/"/g, '""')}"`).join(',')
       )
       .join('\n');
 
@@ -134,14 +233,6 @@ document.addEventListener('DOMContentLoaded', () => {
     link.href = url;
     link.download = `linkflow_export_${new Date().toISOString()}.csv`;
     link.click();
-  }
-
-  function escapeHtml(unsafe) {
-    return unsafe
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#039;');
+    URL.revokeObjectURL(url);
   }
 });

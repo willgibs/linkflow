@@ -12,12 +12,8 @@
   </head>
   <body>
     <div id="app">
-      <header>
-        <img src="logo.svg" alt="Linkflow" class="logo" />
-        <h1>Linkflow</h1>
-      </header>
-
       <main id="main-view">
+        <img src="logo.svg" alt="Linkflow logo" class="logo" />
         <p class="description">Analyze and manage links on your webpage</p>
         <div class="button-group">
           <button id="analyze-all" class="btn btn-primary">
@@ -93,6 +89,16 @@
           </button>
         </div>
         <p id="results-summary"></p>
+        <div class="filter-container">
+          <select id="category-filter" class="category-filter">
+            <option value="all">All Categories</option>
+            <option value="internal">Internal</option>
+            <option value="external">External</option>
+            <option value="social-media">Social Media</option>
+            <option value="email">Email</option>
+            <option value="document">Document</option>
+          </select>
+        </div>
         <div id="links-list"></div>
       </main>
 
