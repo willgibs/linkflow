@@ -1,60 +1,4 @@
-/* Root variables for consistent theming */
-:root {
-  /* Dark mode color palette */
-  --background: 240 10% 3.9%;
-  --foreground: 0 0% 98%;
-  --card: 240 10% 3.9%;
-  --card-foreground: 0 0% 98%;
-  --popover: 240 10% 3.9%;
-  --popover-foreground: 0 0% 98%;
-  --primary: 0 0% 98%;
-  --primary-foreground: 240 5.9% 10%;
-  --secondary: 240 3.7% 15.9%;
-  --secondary-foreground: 0 0% 98%;
-  --muted: 240 3.7% 15.9%;
-  --muted-foreground: 240 5% 64.9%;
-  --accent: 240 3.7% 15.9%;
-  --accent-foreground: 0 0% 98%;
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 0 0% 98%;
-  --border: 240 3.7% 15.9%;
-  --input: 240 3.7% 15.9%;
-  --ring: 240 4.9% 83.9%;
-  --radius: 0.5rem;
-  --content-padding: 1rem; /* New variable for consistent padding */
-
-  /* Category-specific colors */
-  --category-social: 203 89% 53%;
-  --category-internal: 142 76% 36%;
-  --category-contact: 31 95% 44%;
-  --category-document: 271 91% 65%;
-  --category-external: 199 89% 48%;
-  --category-media: 180 70% 45%;
-  --category-download: 280 70% 45%;
-
-  /* Update these variables in the :root and :root.light */
-  --input-bg: 240 3.7% 15.9%;
-  --input-border: 240 3.7% 15.9%;
-  --input-focus-border: 0 0% 98%;
-}
-
-/* Base body styles */
-body {
-  font-family: 'Inter', sans-serif;
-  background-color: hsl(var(--background));
-  color: hsl(var(--foreground));
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  width: 350px;
-  height: 500px;
-  transition: width 0.3s ease, height 0.3s ease, background-color 0.3s ease,
-    color 0.3s ease;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Main app container */
+/* Component-specific styles */
 #app {
   display: flex;
   flex-direction: column;
@@ -64,7 +8,6 @@ body {
   transition: opacity 0.2s ease;
 }
 
-/* Main view styles */
 #main-view {
   display: flex;
   flex-direction: column;
@@ -74,21 +17,12 @@ body {
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-/* Results view styles */
 #results-view {
   display: none;
   opacity: 0;
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-body.results-active #results-view {
-  display: flex;
-  animation: fadeIn 0.3s ease forwards;
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Active results state */
 body.results-active {
   width: 350px;
   height: 500px;
@@ -105,29 +39,41 @@ body.results-active #results-view {
   flex-direction: column;
   height: 100%;
   opacity: 1;
+  animation: fadeIn 0.3s ease forwards;
+  transform: translateY(0);
 }
 
-/* Main content area */
 main {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
 }
 
-/* Description text styles */
+.logo {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 0;
+}
+
+.app-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0.5rem 0 0.25rem;
+  color: hsl(var(--foreground));
+}
+
 .description {
   text-align: center;
   color: hsl(var(--muted-foreground));
   margin-top: 0.25rem;
   margin-bottom: 3rem;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 400;
-  max-width: 70%; /* Reduced from 80% to 70% */
+  max-width: 70%;
   line-height: 1.5;
   letter-spacing: -0.01em;
 }
 
-/* Button group container */
 .button-group {
   display: flex;
   flex-direction: column;
@@ -135,7 +81,6 @@ main {
   width: 100%;
 }
 
-/* Base button styles */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -149,18 +94,15 @@ main {
   cursor: pointer;
   width: 100%;
   border: 1px solid transparent;
-  transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
-/* Button icon styles */
 .btn svg {
   width: 20px;
   height: 20px;
-  min-width: 20px; /* Prevent icon from shrinking */
+  min-width: 20px;
   margin-right: 0.5rem;
 }
 
-/* Primary button styles */
 .btn-primary {
   background-color: hsl(var(--primary));
   color: hsl(var(--primary-foreground));
@@ -170,7 +112,6 @@ main {
   background-color: hsl(var(--primary) / 0.9);
 }
 
-/* Secondary button styles */
 .btn-secondary {
   background-color: hsl(var(--secondary));
   color: hsl(var(--secondary-foreground));
@@ -180,7 +121,6 @@ main {
   background-color: hsl(var(--secondary) / 0.8);
 }
 
-/* Icon-only button styles */
 .btn-icon {
   padding: 0;
   width: 2.5rem;
@@ -188,29 +128,33 @@ main {
   border: 1px solid hsl(var(--border));
   background-color: transparent;
   color: hsl(var(--foreground));
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .btn-icon svg {
-  width: 20px;
-  height: 20px;
-  min-width: 20px; /* Prevent icon from shrinking */
-  margin-right: 0; /* Remove margin for icon-only buttons */
+  margin-right: 0;
 }
 
 .btn-icon:hover {
   background-color: hsl(var(--secondary));
 }
 
-/* Results header styles */
 .results-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin: -0.5rem calc(-1 * var(--content-padding)) 1rem;
   padding: 0 var(--content-padding);
+}
+
+.results-header .btn-icon {
+  width: 2rem;
+  height: 2rem;
+}
+
+.results-header .btn-icon svg {
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
 }
 
 #results-title {
@@ -230,7 +174,6 @@ main {
   font-weight: 600;
 }
 
-/* Links list container */
 #links-list {
   overflow-y: auto;
   flex-grow: 1;
@@ -238,14 +181,13 @@ main {
   padding: 0 var(--content-padding);
 }
 
-/* Add animation to link items */
 .link-item {
   animation: slideIn 0.3s ease forwards;
   opacity: 0;
-  padding: 0.375rem; /* Reduced from 0.75rem */
+  padding: 0.375rem;
   border: 1px solid hsl(var(--border));
   border-radius: var(--radius);
-  margin-bottom: 0.375rem; /* Reduced from 0.75rem */
+  margin-bottom: 0.375rem;
   cursor: pointer;
   transition: background-color 0.2s ease;
   background-color: hsl(var(--card));
@@ -257,7 +199,7 @@ main {
 
 .link-title {
   font-weight: 500;
-  margin-bottom: 0.125rem; /* Reduced from 0.25rem */
+  margin-bottom: 0.125rem;
   font-size: 0.875rem;
 }
 
@@ -267,13 +209,22 @@ main {
   word-break: break-all;
 }
 
-/* Footer styles */
+.link-category {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  padding: 0.125rem 0.25rem;
+  border-radius: 9999px;
+  display: inline-block;
+  margin-top: 0.25rem;
+}
+
 footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0.75rem var(--content-padding);
   font-size: 0.75rem;
+  background-color: transparent;
 }
 
 .footer-link {
@@ -286,64 +237,12 @@ footer {
   color: hsl(var(--foreground));
 }
 
-/* Utility class for hiding elements */
-.hidden {
-  display: none;
-}
-
-/* Link category label styles */
-.link-category {
-  font-size: 0.6875rem;
-  font-weight: 500;
-  padding: 0.125rem 0.25rem; /* Reduced from 0.25rem 0.5rem */
-  border-radius: 9999px;
-  display: inline-block;
-  margin-top: 0.25rem; /* Reduced from 0.5rem */
-}
-
-/* Category-specific styles */
-.category-social-media {
-  background-color: hsl(var(--category-social) / 0.1);
-  color: hsl(var(--category-social));
-}
-
-.category-internal {
-  background-color: hsl(var(--category-internal) / 0.1);
-  color: hsl(var(--category-internal));
-}
-
-.category-contact {
-  background-color: hsl(var(--category-email) / 0.1);
-  color: hsl(var(--category-email));
-}
-
-.category-document {
-  background-color: hsl(var(--category-document) / 0.1);
-  color: hsl(var(--category-document));
-}
-
-.category-external {
-  background-color: hsl(var(--category-external) / 0.1);
-  color: hsl(var(--category-external));
-}
-
-.category-media {
-  background-color: hsl(180, 70%, 45% / 0.1);
-  color: hsl(180, 70%, 45%);
-}
-
-.category-download {
-  background-color: hsl(280, 70%, 45% / 0.1);
-  color: hsl(280, 70%, 45%);
-}
-
-/* Filter container styles */
 .filter-container {
   margin-bottom: 1rem;
   width: 316px;
 }
 
-/* Category filter dropdown styles */
+.search-input,
 .category-filter {
   width: 100%;
   padding: 0.75rem 1rem;
@@ -352,110 +251,29 @@ footer {
   background-color: hsl(var(--input-bg));
   color: hsl(var(--foreground));
   font-size: 0.875rem;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 1rem center;
-  background-size: 1em;
-  padding-right: 2.5rem;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
+.search-input {
+  margin-bottom: 0.75rem;
+}
+
+.search-input:focus,
 .category-filter:focus {
   outline: none;
   border-color: hsl(var(--input-focus-border));
   box-shadow: 0 0 0 1px hsl(var(--input-focus-border));
 }
 
-/* Ensure only one input has the focus style at a time */
-.search-input:focus ~ .filter-container .category-filter,
-.category-filter:focus ~ .search-input {
-  border-color: hsl(var(--input-border));
-  box-shadow: none;
+.category-filter {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1em;
+  padding-right: 2.5rem;
 }
 
-/* Adjust the chevron color for light mode */
-:root.light .category-filter {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-}
-
-/* Logo styles */
-.logo {
-  width: 48px;
-  height: 48px;
-  margin-bottom: 0;
-}
-
-/* Back to top button styles */
-.back-to-top {
-  display: none;
-  background-color: transparent;
-  color: hsl(var(--primary));
-  border: none;
-  width: 2rem;
-  height: 2rem;
-  padding: 0;
-  cursor: pointer;
-}
-
-.back-to-top svg {
-  width: 1.25rem;
-  height: 1.25rem;
-}
-
-.back-to-top:hover {
-  color: hsl(var(--primary) / 0.8);
-}
-
-/* Modernized link highlighting */
-.linkflow-highlight {
-  position: relative;
-  background-color: hsl(var(--primary) / 0.1);
-  border-radius: var(--radius);
-  transition: all 0.3s ease;
-  box-shadow: 0 0 0 2px hsl(var(--primary) / 0.2);
-}
-
-.linkflow-highlight:hover {
-  background-color: hsl(var(--primary) / 0.2);
-}
-
-.linkflow-tooltip {
-  position: absolute;
-  background-color: hsl(var(--popover));
-  color: hsl(var(--popover-foreground));
-  padding: 0.5rem 0.75rem;
-  border-radius: var(--radius);
-  font-size: 0.75rem;
-  bottom: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-  white-space: nowrap;
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-}
-
-.linkflow-highlight:hover .linkflow-tooltip {
-  opacity: 1;
-}
-
-.linkflow-pulse {
-  animation: linkflow-pulse-animation 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-@keyframes linkflow-pulse-animation {
-  0%,
-  100% {
-    box-shadow: 0 0 0 2px hsl(var(--primary) / 0.2);
-  }
-  50% {
-    box-shadow: 0 0 0 4px hsl(var(--primary) / 0.4);
-  }
-}
-
-/* Theme toggle styles */
 .theme-toggle {
   background: none;
   border: none;
@@ -477,165 +295,9 @@ footer {
 .theme-toggle svg {
   width: 20px;
   height: 20px;
-  min-width: 20px; /* Prevent icon from shrinking */
+  min-width: 20px;
 }
 
-/* Update footer styles to accommodate the toggle */
-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.75rem var(--content-padding);
-  font-size: 0.75rem;
-  background-color: hsl(var(--background));
-  margin: 0 calc(-1 * var(--content-padding));
-}
-
-/* Light theme styles */
-:root.light {
-  --background: 0 0% 100%;
-  --foreground: 222.2 84% 4.9%;
-  --card: 0 0% 100%;
-  --card-foreground: 222.2 84% 4.9%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 222.2 84% 4.9%;
-  --primary: 221.2 83.2% 53.3%;
-  --primary-foreground: 210 40% 98%;
-  --secondary: 210 40% 96.1%;
-  --secondary-foreground: 222.2 47.4% 11.2%;
-  --muted: 210 40% 96.1%;
-  --muted-foreground: 215.4 16.3% 46.9%;
-  --accent: 210 40% 96.1%;
-  --accent-foreground: 222.2 47.4% 11.2%;
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 214.3 31.8% 91.4%;
-  --input: 214.3 31.8% 91.4%;
-  --ring: 221.2 83.2% 53.3%;
-
-  /* Adjust category colors for light theme */
-  --category-social: 203 89% 53%;
-  --category-internal: 142 76% 36%;
-  --category-contact: 31 95% 44%;
-  --category-document: 271 91% 65%;
-  --category-external: 199 89% 48%;
-  --category-media: 180 70% 45%;
-  --category-download: 280 70% 45%;
-
-  /* Update these variables in the :root and :root.light */
-  --input-bg: 210 40% 98%; /* Light blue-gray background */
-  --input-border: 214.3 31.8% 91.4%;
-  --input-focus-border: 221.2 83.2% 53.3%;
-}
-
-/* Adjust category colors for light theme */
-:root.light .category-social-media {
-  color: hsl(203 89% 40%);
-}
-:root.light .category-internal {
-  color: hsl(142 76% 30%);
-}
-:root.light .category-contact {
-  color: hsl(31 95% 35%);
-}
-:root.light .category-document {
-  color: hsl(271 91% 50%);
-}
-:root.light .category-external {
-  color: hsl(199 89% 35%);
-}
-:root.light .category-media {
-  color: hsl(180 70% 35%);
-}
-:root.light .category-download {
-  color: hsl(280 70% 35%);
-}
-
-/* Add some subtle shadows for depth in light mode */
-:root.light .btn,
-:root.light .search-input,
-:root.light .category-filter,
-:root.light .link-item {
-  box-shadow: none;
-}
-
-:root.light .btn:hover,
-:root.light .link-item:hover {
-  box-shadow: none;
-}
-
-/* Adjust button styles for light mode */
-:root.light .btn-primary {
-  background-color: hsl(var(--primary));
-  color: hsl(var(--primary-foreground));
-}
-
-:root.light .btn-primary:hover {
-  background-color: hsl(var(--primary) / 0.9);
-}
-
-:root.light .btn-secondary {
-  background-color: hsl(var(--secondary));
-  color: hsl(var(--secondary-foreground));
-}
-
-:root.light .btn-secondary:hover {
-  background-color: hsl(var(--secondary) / 0.8);
-}
-
-/* Update the search input styles */
-.search-input {
-  width: 282px;
-  padding: 0.75rem 1rem;
-  border-radius: var(--radius);
-  border: 1px solid hsl(var(--input-border));
-  background-color: hsl(var(--input-bg));
-  color: hsl(var(--foreground));
-  font-size: 0.875rem;
-  margin-bottom: 0.75rem;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.search-input:focus {
-  outline: none;
-  border-color: hsl(var(--input-focus-border));
-  box-shadow: 0 0 0 1px hsl(var(--input-focus-border));
-}
-
-/* Adjust the back and export button sizes */
-.results-header .btn-icon {
-  width: 2rem;
-  height: 2rem;
-}
-
-.results-header .btn-icon svg {
-  width: 16px;
-  height: 16px;
-  min-width: 16px;
-}
-
-/* Add these animation keyframes at the end of the file */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes slideIn {
-  from {
-    transform: translateY(10px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-/* Add a loading indicator for scans */
 .loading-indicator {
   display: none;
   justify-content: center;
@@ -663,56 +325,8 @@ footer {
   animation: spin 1s linear infinite;
 }
 
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-/* Remove footer background color and animation/transition */
-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.75rem var(--content-padding);
-  font-size: 0.75rem;
-}
-
-/* Update the category filter styles for dark mode */
-.category-filter {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  border-radius: var(--radius);
-  border: 1px solid hsl(var(--input-border));
-  background-color: hsl(var(--input-bg));
-  color: hsl(var(--foreground));
-  font-size: 0.875rem;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 1rem center;
-  background-size: 1em;
-  padding-right: 2.5rem;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-/* Update the category filter styles for light mode */
 :root.light .category-filter {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-}
-
-/* Remove any remaining footer background styles */
-:root.light footer,
-footer {
-  background-color: transparent;
-}
-
-/* Update the search input and category filter styles for light mode */
-:root.light {
-  --input-bg: 210 40% 98%; /* Light blue-gray background */
 }
 
 :root.light .search-input,
@@ -726,20 +340,4 @@ footer {
   background-color: hsl(var(--background));
   border-color: hsl(var(--input-focus-border));
   box-shadow: 0 0 0 1px hsl(var(--input-focus-border));
-}
-
-/* Rest of the CSS remains unchanged */
-
-/* Add this near the logo styles */
-.app-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin: 0.5rem 0 0.25rem; /* Added 0.25rem bottom margin */
-  color: hsl(var(--foreground));
-}
-
-/* Adjust the description margin */
-.description {
-  margin-top: 0.25rem;
-  /* ... (other existing styles remain unchanged) ... */
 }

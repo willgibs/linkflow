@@ -1,21 +1,112 @@
-/* Add these rules at the beginning of the file */
-body.light-theme {
-  --bg-color: #f0f0f0;
-  --text-color: #333;
-  --primary-color: #007bff;
+/* Global variables */
+:root {
+  --background: 240 10% 3.9%;
+  --foreground: 0 0% 98%;
+  --card: 240 10% 3.9%;
+  --card-foreground: 0 0% 98%;
+  --popover: 240 10% 3.9%;
+  --popover-foreground: 0 0% 98%;
+  --primary: 0 0% 98%;
+  --primary-foreground: 240 5.9% 10%;
+  --secondary: 240 3.7% 15.9%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 240 3.7% 15.9%;
+  --muted-foreground: 240 5% 64.9%;
+  --accent: 240 3.7% 15.9%;
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 240 3.7% 15.9%;
+  --input: 240 3.7% 15.9%;
+  --ring: 240 4.9% 83.9%;
+  --radius: 0.5rem;
+  --content-padding: 1rem;
+  --input-bg: 240 3.7% 15.9%;
+  --input-border: 240 3.7% 15.9%;
+  --input-focus-border: 0 0% 98%;
+
+  --category-social: 203 89% 53%;
+  --category-internal: 142 76% 36%;
+  --category-contact: 31 95% 44%;
+  --category-document: 271 91% 65%;
+  --category-external: 199 89% 48%;
+  --category-media: 180 70% 45%;
+  --category-download: 280 70% 45%;
 }
 
-body.dark-theme {
-  --bg-color: #333;
-  --text-color: #f0f0f0;
-  --primary-color: #4da6ff;
+/* Light theme variables */
+:root.light {
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 84% 4.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222.2 84% 4.9%;
+  --primary: 221.2 83.2% 53.3%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 210 40% 96.1%;
+  --secondary-foreground: 222.2 47.4% 11.2%;
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  --accent: 210 40% 96.1%;
+  --accent-foreground: 222.2 47.4% 11.2%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 221.2 83.2% 53.3%;
+  --input-bg: 210 40% 98%;
+  --input-border: 214.3 31.8% 91.4%;
+  --input-focus-border: 221.2 83.2% 53.3%;
 }
 
-/* Update the existing body selector */
+/* Global styles */
 body {
-  background-color: var(--bg-color);
-  color: var(--text-color);
-  /* Rest of the body styles remain unchanged */
+  font-family: 'Inter', sans-serif;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  width: 350px;
+  height: 500px;
+  transition: width 0.3s ease, height 0.3s ease, background-color 0.3s ease,
+    color 0.3s ease;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Rest of the CSS remains unchanged */
+/* Utility classes */
+.hidden {
+  display: none;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
