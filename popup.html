@@ -14,8 +14,9 @@
     <div id="app">
       <main id="main-view">
         <img src="logo.svg" alt="Linkflow logo" class="logo" />
+        <h1 class="app-title">Linkflow</h1>
         <p class="description">
-          Analyze and manage links on any webpage with ease
+          Analyze and manage links on any webpage with ease.
         </p>
         <div class="button-group">
           <button id="analyze-all" class="btn btn-primary">
@@ -110,6 +111,12 @@
           </button>
         </div>
         <p id="results-summary"></p>
+        <input
+          type="text"
+          id="search-input"
+          placeholder="Search links..."
+          class="search-input"
+        />
         <div class="filter-container">
           <select id="category-filter" class="category-filter">
             <option value="all">All Categories</option>
@@ -164,6 +171,9 @@
           >Support</a
         >
       </footer>
+    </div>
+    <div class="loading-indicator">
+      <div class="loading-spinner"></div>
     </div>
     <script src="popup.js"></script>
   </body>

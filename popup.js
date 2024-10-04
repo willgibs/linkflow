@@ -12,6 +12,8 @@ document.addEventListener('DOMContentLoaded', () => {
     linksList: document.getElementById('links-list'),
     categoryFilter: document.getElementById('category-filter'),
     identifyUniqueBtn: document.getElementById('identify-unique'),
+    searchInput: document.getElementById('search-input'),
+    loadingIndicator: document.querySelector('.loading-indicator'),
   };
 
   // Variables to store current action and sitemap data
@@ -44,6 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
   exportBtn.addEventListener('click', actions.exportToCSV);
   categoryFilter.addEventListener('change', handleCategoryFilter);
   identifyUniqueBtn.addEventListener('click', actions.identifyUniqueLinks);
+  elements.searchInput.addEventListener('input', handleSearch);
 
   // Function to execute the selected action
   async function executeAction(action) {
@@ -84,11 +87,13 @@ document.addEventListener('DOMContentLoaded', () => {
   function showLoadingState() {
     document.body.classList.add('results-active');
     elements.resultsView.style.opacity = '0';
+    elements.loadingIndicator.classList.add('active');
   }
 
   // Function to hide loading state
   function hideLoadingState() {
     elements.resultsView.style.opacity = '1';
+    elements.loadingIndicator.classList.remove('active');
   }
 
   // Function to show main view
@@ -160,9 +165,29 @@ document.addEventListener('DOMContentLoaded', () => {
     renderFilteredLinks(currentAction === 'generateSitemap', e.target.value);
   }
 
-  // Function to render filtered links
-  function renderFilteredLinks(withCategory, filter = 'all') {
+  // Function to handle search input changes
+  function handleSearch(e) {
+    const searchTerm = e.target.value.toLowerCase();
     const filteredLinks = sitemapData.filter(
+      (link) =>
+        link.title.toLowerCase().includes(searchTerm) ||
+        link.url.toLowerCase().includes(searchTerm)
+    );
+    renderFilteredLinks(
+      currentAction === 'generateSitemap',
+      elements.categoryFilter.value,
+      filteredLinks
+    );
+  }
+
+  // Function to render filtered links
+  function renderFilteredLinks(
+    withCategory,
+    filter = 'all',
+    customLinks = null
+  ) {
+    const linksToRender = customLinks || sitemapData;
+    const filteredLinks = linksToRender.filter(
       (link) =>
         filter === 'all' ||
         link.category.toLowerCase().replace(' ', '-') === filter
