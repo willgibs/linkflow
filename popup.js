@@ -66,17 +66,37 @@ document.addEventListener('DOMContentLoaded', () => {
       resultsSummary.innerHTML = `Found <span class="count">${count}</span> link${
         count !== 1 ? 's' : ''
       } on the page.`;
+      linksList.innerHTML = sitemapData
+        .map(createLinkItemWithCategory)
+        .join('');
     } else {
       resultsTitle.textContent = 'Empty Links';
       resultsSummary.innerHTML = `Found <span class="count">${count}</span> empty or potentially broken link${
         count !== 1 ? 's' : ''
       }.`;
+      linksList.innerHTML = sitemapData
+        .map(createLinkItemWithoutCategory)
+        .join('');
     }
-    linksList.innerHTML = sitemapData.map(createLinkItem).join('');
     addLinkListeners();
   }
 
-  function createLinkItem(link) {
+  function createLinkItemWithCategory(link) {
+    const categoryClass = `category-${link.category
+      .toLowerCase()
+      .replace(' ', '-')}`;
+    return `
+      <div class="link-item" data-id="${link.id}">
+        <div class="link-title">${escapeHtml(link.title)}</div>
+        <div class="link-url">${escapeHtml(link.url)}</div>
+        <div class="link-category ${categoryClass}">${escapeHtml(
+      link.category
+    )}</div>
+      </div>
+    `;
+  }
+
+  function createLinkItemWithoutCategory(link) {
     return `
       <div class="link-item" data-id="${link.id}">
         <div class="link-title">${escapeHtml(link.title)}</div>
@@ -100,8 +120,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function exportToCSV() {
     const csvContent = [
-      ['Link Title', 'URL'],
-      ...sitemapData.map(({ title, url }) => [title, url]),
+      ['Link Title', 'URL', 'Category'],
+      ...sitemapData.map(({ title, url, category }) => [title, url, category]),
     ]
       .map((row) =>
         row.map((cell) => `"${cell.replace(/"/g, '""')}"`).join(',')

@@ -11,17 +11,45 @@
     link.style.setProperty('--highlight-color', color);
   }
 
+  function categorizeLink(url) {
+    if (
+      url.includes('facebook.com') ||
+      url.includes('twitter.com') ||
+      url.includes('instagram.com') ||
+      url.includes('linkedin.com')
+    ) {
+      return 'Social Media';
+    } else if (url.startsWith(window.location.origin)) {
+      return 'Internal';
+    } else if (url.startsWith('mailto:')) {
+      return 'Email';
+    } else if (
+      url.endsWith('.pdf') ||
+      url.endsWith('.doc') ||
+      url.endsWith('.docx') ||
+      url.endsWith('.xls') ||
+      url.endsWith('.xlsx')
+    ) {
+      return 'Document';
+    } else {
+      return 'External';
+    }
+  }
+
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === 'generateSitemap') {
       const links = Array.from(document.querySelectorAll('a'));
       const sitemap = links.map((link, index) => {
         addModernHighlight(link, 'rgba(34, 197, 94, 0.2)'); // Light green highlight
         createTooltip(link, 'Sitemap Link');
-        const title = link.innerText || link.textContent || 'undefined';
+        const title = (link.innerText || link.textContent || 'undefined')
+          .replace(/Sitemap Link|Broken Link/g, '')
+          .trim();
         const url = link.href;
         const id = `link-${btoa(url)}-${index}`; // Assign unique ID based on URL and index
         link.id = id;
-        return { id, title, url };
+        const category = categorizeLink(url);
+        return { id, title, url, category };
       });
 
       chrome.runtime.sendMessage({
@@ -46,11 +74,14 @@
           addModernHighlight(link, 'rgba(239, 68, 68, 0.2)'); // Light red highlight
           createTooltip(link, 'Broken Link');
           const title = (link.innerText || link.textContent || 'undefined')
-            .replace(/Broken Link/g, '')
+            .replace(/Sitemap Link|Broken Link/g, '')
             .trim();
           const id = `link-${btoa(link.href || 'No href attribute')}-${index}`;
           link.id = id;
-          return [{ id, title, url: link.href || 'No href attribute' }];
+          const category = categorizeLink(link.href || '');
+          return [
+            { id, title, url: link.href || 'No href attribute', category },
+          ];
         } else {
           return [];
         }
