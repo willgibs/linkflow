@@ -8,18 +8,18 @@
   <a href="mailto:hi@willgibs.com?subject=Linkflow"><img src="https://img.shields.io/badge/Email-Will%20Gibson-blue" alt="Email Will Gibson"></a>
 </p>
 
-Linkflow is a Chrome Extension that simplifies website link analysis and management. It offers tools to visualize site structure, identify navigation issues, and optimize link architecture — all from your browser.
+Linkflow is a modern Chrome Extension that simplifies website link analysis and management. It offers tools to visualize site structure, identify navigation issues, and optimize link architecture — all from your browser. Built with attention to detail and a focus on user experience.
 
 ## Features
 
-- **Identify All Links**: Generate a visual sitemap of any webpage.
-- **Scan for Empty Links**: Find and highlight potential navigation issues.
-- **Identify Unique Links**: List unique links to streamline navigation.
-- **Export to CSV**: Save link data for further analysis.
-- **Scroll to Link**: Quickly navigate to links on the page.
-- **Link Highlighting**: Visually inspect links on the webpage.
-- **Category Filtering**: Filter links by category for focused analysis.
-- **Dark/Light Theme**: Toggle between viewing modes for comfort.
+- **Identify All Links**: Generate a visual sitemap of any webpage with intuitive highlighting
+- **Scan for Empty Links**: Find and highlight potential navigation issues and dead ends
+- **Identify Unique Links**: List unique links to streamline navigation and reduce redundancy
+- **Interactive Link List**: Click any link in the results to highlight it on the page
+- **Smart Theme Support**: Automatically adapts to your system theme with manual toggle option
+- **Modern UI**: Clean, Apple-inspired interface using Geist and Geist Mono fonts
+- **Responsive Design**: Smooth animations and transitions for a polished experience
+- **Adaptive Highlighting**: Context-aware link highlighting that works in both light and dark modes
 
 ## Download
 
@@ -27,32 +27,44 @@ Get Linkflow from the [Chrome Web Store](https://chrome.google.com/webstore/deta
 
 ## Local Installation
 
-1. Clone or download the repository.
-2. Go to `chrome://extensions/` in Chrome.
-3. Enable "Developer mode".
-4. Click "Load unpacked" and select the Linkflow folder.
+1. Clone or download the repository
+2. Navigate to `chrome://extensions/` in Chrome
+3. Enable "Developer mode" in the top right
+4. Click "Load unpacked" and select the Linkflow folder
 
 ## Usage
 
-1. Click the Linkflow icon on any webpage.
-2. Choose an analysis option.
-3. Use category filters to refine results.
-4. Click listed links to locate them on the page.
-5. Export results to CSV if needed.
-6. Switch themes as desired.
+1. Click the Linkflow icon in your Chrome toolbar
+2. Choose a scan option:
+   - **Scan All Links**: Shows every link on the page
+   - **Find Empty Links**: Identifies problematic or empty links
+   - **Find Unique Links**: Lists each unique URL once
+3. Click the results count to view detailed link list
+4. Click any link in the list to highlight it on the page
+5. Use the theme toggle to switch between light and dark modes
 
 ## Development
 
-Customize Linkflow by editing:
+The extension is built with modern web technologies:
 
-- `popup.html`, `popup.css`, `popup.js` for the extension popup.
-- `contentScript.js` for webpage interaction.
-- `manifest.json` for permissions and configuration.
+- **popup.js**: Core UI logic and extension functionality
+- **contentScript.js**: Webpage interaction and link highlighting
+- **themeManager.js**: Theme management and system preference handling
+- **popup.css**: Styling with CSS variables for theming
+- **manifest.json**: Extension configuration and permissions
 
-## Build and Package
+### Key Components
 
-1. Update and test all files.
-2. Create a ZIP of the extension files.
-3. Follow [Chrome Web Store guidelines](https://developer.chrome.com/docs/webstore/publish/) for submission.
+- Custom font implementation using Geist and Geist Mono
+- CSS variables for consistent theming
+- Smooth animations and transitions
+- Responsive and accessible UI elements
+- System theme detection and override support
 
-Contributions and customizations are welcome!
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+MIT License - see LICENSE file for details.

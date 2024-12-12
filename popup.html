@@ -4,12 +4,21 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Linkflow</title>
-    <link rel="stylesheet" href="popup.css" />
+    <link rel="stylesheet" href="src/styles/popup.css" />
   </head>
   <body>
     <div class="container" id="main-container">
-      <img src="logo.svg" alt="Linkflow" class="logo" />
-      <h1>Linkflow</h1>
+      <div class="header-row">
+        <img src="assets/icons/logo.svg" alt="Linkflow" class="logo" />
+        <h1>Linkflow</h1>
+        <button
+          id="theme-toggle"
+          class="theme-toggle"
+          aria-label="Toggle theme"
+        >
+          <!-- Icon will be set by JS -->
+        </button>
+      </div>
 
       <div class="buttons">
         <button id="scan-all" class="btn btn-primary">
@@ -33,6 +42,7 @@
       </button>
       <div class="links-list" id="links-list"></div>
     </div>
-    <script src="popup.js"></script>
+    <script src="src/scripts/themeManager.js"></script>
+    <script src="src/scripts/popup.js"></script>
   </body>
 </html>

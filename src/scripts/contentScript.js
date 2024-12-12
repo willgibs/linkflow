@@ -1,9 +1,11 @@
+// linkscanner class - handles all webpage link interactions and highlighting
 class LinkScanner {
   constructor() {
     this.setupMessageListener();
     this.addStyles();
   }
 
+  // listen for messages from the popup
   setupMessageListener() {
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       switch (request.action) {
@@ -28,30 +30,58 @@ class LinkScanner {
     });
   }
 
+  // inject required styles for link highlighting
   addStyles() {
     const style = document.createElement('style');
     style.textContent = `
+      /* theme-aware variables for link highlighting */
+      :root {
+        --linkflow-all-bg: rgba(34, 197, 94, 0.15);
+        --linkflow-all-outline: rgba(34, 197, 94, 0.7);
+        --linkflow-empty-bg: rgba(239, 68, 68, 0.15);
+        --linkflow-empty-outline: rgba(239, 68, 68, 0.7);
+        --linkflow-unique-bg: rgba(147, 51, 234, 0.15);
+        --linkflow-unique-outline: rgba(147, 51, 234, 0.7);
+      }
+
+      /* adjust highlight colors for dark mode */
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --linkflow-all-bg: rgba(34, 197, 94, 0.25);
+          --linkflow-all-outline: rgba(34, 197, 94, 0.8);
+          --linkflow-empty-bg: rgba(239, 68, 68, 0.25);
+          --linkflow-empty-outline: rgba(239, 68, 68, 0.8);
+          --linkflow-unique-bg: rgba(147, 51, 234, 0.25);
+          --linkflow-unique-outline: rgba(147, 51, 234, 0.8);
+        }
+      }
+
+      /* base highlight styles */
       .linkflow-highlight {
-        background-color: var(--highlight-color, rgba(34, 197, 94, 0.2)) !important;
-        outline: 2px solid var(--outline-color, rgba(34, 197, 94, 0.8)) !important;
+        background-color: var(--highlight-color) !important;
+        outline: 2px solid var(--outline-color) !important;
         border-radius: 4px !important;
-        transition: all 0.3s ease !important;
-        color: white !important;
+        transition: all 0.15s ease !important;
+        color: var(--text-color, white) !important;
         text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
       }
       
+      /* ensure all child elements inherit text color */
       .linkflow-highlight * {
         color: white !important;
       }
       
+      /* hover effect for highlighted links */
       .linkflow-highlight:hover {
         filter: brightness(1.1);
       }
       
+      /* pulse animation for selected links */
       .linkflow-highlight-pulse {
-        animation: linkflowPulse 1s ease-out;
+        animation: linkflowPulse 0.3s ease-out;
       }
       
+      /* pulse animation keyframes */
       @keyframes linkflowPulse {
         0% {
           transform: scale(1);
@@ -70,6 +100,7 @@ class LinkScanner {
     document.head.appendChild(style);
   }
 
+  // remove all link highlights
   clearHighlights() {
     document.querySelectorAll('.linkflow-highlight').forEach((el) => {
       el.classList.remove('linkflow-highlight');
@@ -78,12 +109,14 @@ class LinkScanner {
     });
   }
 
+  // apply highlight styles to an element
   highlightElement(element, highlightColor, outlineColor) {
     element.classList.add('linkflow-highlight');
     element.style.setProperty('--highlight-color', highlightColor);
     element.style.setProperty('--outline-color', outlineColor);
   }
 
+  // scan and highlight all links on the page
   highlightAllLinks() {
     const links = document.querySelectorAll('a');
     const hrefs = [];
@@ -93,8 +126,8 @@ class LinkScanner {
       link.dataset.linkflowId = linkId;
       this.highlightElement(
         link,
-        'rgba(34, 197, 94, 0.2)',
-        'rgba(34, 197, 94, 0.8)'
+        'var(--linkflow-all-bg)',
+        'var(--linkflow-all-outline)'
       );
       hrefs.push({ href: link.href, id: linkId });
     });
@@ -107,6 +140,7 @@ class LinkScanner {
     });
   }
 
+  // scan and highlight empty or invalid links
   highlightEmptyLinks() {
     const links = document.querySelectorAll('a');
     const currentUrl = window.location.href.split('#')[0];
@@ -127,8 +161,8 @@ class LinkScanner {
         link.dataset.linkflowId = linkId;
         this.highlightElement(
           link,
-          'rgba(239, 68, 68, 0.2)',
-          'rgba(239, 68, 68, 0.8)'
+          'var(--linkflow-empty-bg)',
+          'var(--linkflow-empty-outline)'
         );
         emptyCount++;
         emptyHrefs.push({ href: href || '(empty)', id: linkId });
@@ -143,6 +177,7 @@ class LinkScanner {
     });
   }
 
+  // scan and highlight unique links
   highlightUniqueLinks() {
     const links = document.querySelectorAll('a');
     const uniqueUrls = new Set();
@@ -157,8 +192,8 @@ class LinkScanner {
         uniqueUrls.add(href);
         this.highlightElement(
           link,
-          'rgba(147, 51, 234, 0.2)',
-          'rgba(147, 51, 234, 0.8)'
+          'var(--linkflow-unique-bg)',
+          'var(--linkflow-unique-outline)'
         );
         uniqueCount++;
         uniqueHrefs.push({ href, id: linkId });
@@ -173,15 +208,17 @@ class LinkScanner {
     });
   }
 
+  // highlight and scroll to a specific link
   highlightSpecificLink(linkId) {
     const link = document.querySelector(`[data-linkflow-id="${linkId}"]`);
     if (link) {
       link.scrollIntoView({ behavior: 'smooth', block: 'center' });
       link.classList.remove('linkflow-highlight-pulse');
-      void link.offsetWidth;
+      void link.offsetWidth; // force reflow for animation
       link.classList.add('linkflow-highlight-pulse');
     }
   }
 }
 
+// initialize scanner when script loads
 new LinkScanner();

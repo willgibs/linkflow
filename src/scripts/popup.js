@@ -1,4 +1,4 @@
-// Create a UI manager class
+// linkflow ui manager class - handles all popup interface interactions
 class LinkflowUI {
   constructor() {
     this.elements = this.getElements();
@@ -8,6 +8,7 @@ class LinkflowUI {
     this.currentLinks = [];
   }
 
+  // cache dom elements for better performance
   getElements() {
     return {
       scanAllBtn: document.getElementById('scan-all'),
@@ -22,7 +23,9 @@ class LinkflowUI {
     };
   }
 
+  // setup event listeners for all interactive elements
   setupEventListeners() {
+    // define scan actions with their corresponding buttons and active states
     const scanActions = [
       {
         button: 'scanAllBtn',
@@ -41,6 +44,7 @@ class LinkflowUI {
       },
     ];
 
+    // attach click handlers to scan buttons
     scanActions.forEach(({ button, action, activeClass }) => {
       this.elements[button].addEventListener('click', () => {
         this.setActiveButton(this.elements[button], activeClass);
@@ -48,7 +52,7 @@ class LinkflowUI {
       });
     });
 
-    // Add click handler for results count
+    // handle results count click to show detailed list
     this.elements.resultCount.addEventListener('click', (e) => {
       e.preventDefault();
       if (this.currentLinks.length > 0) {
@@ -56,17 +60,18 @@ class LinkflowUI {
       }
     });
 
-    // Add click handler for back button
+    // handle back button click to return to main view
     this.elements.backButton.addEventListener('click', () => {
       this.showMainView();
     });
   }
 
+  // display the list of found links
   showLinksList() {
     this.elements.mainContainer.classList.add('hidden');
     this.elements.listContainer.classList.remove('hidden');
 
-    // Clear and populate links list
+    // generate and insert link items
     this.elements.linksList.innerHTML = this.currentLinks
       .map(
         (link) => `
@@ -77,12 +82,13 @@ class LinkflowUI {
       )
       .join('');
 
-    // Add click handlers to link items
+    // attach click handlers to each link item
     this.elements.linksList.querySelectorAll('.link-item').forEach((item) => {
       item.addEventListener('click', () => this.handleLinkItemClick(item));
     });
   }
 
+  // handle click on a specific link item
   async handleLinkItemClick(item) {
     const linkId = item.dataset.linkflowId;
     try {
@@ -95,20 +101,22 @@ class LinkflowUI {
         linkId,
       });
 
-      // Add visual feedback in the popup
+      // provide visual feedback in the popup
       item.classList.remove('link-item-active');
-      void item.offsetWidth; // Force reflow
+      void item.offsetWidth; // force reflow for animation
       item.classList.add('link-item-active');
     } catch (error) {
       console.error('Error highlighting link:', error);
     }
   }
 
+  // return to main view from list view
   showMainView() {
     this.elements.listContainer.classList.add('hidden');
     this.elements.mainContainer.classList.remove('hidden');
   }
 
+  // setup message listener for communication with content script
   setupMessageListener() {
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       if (request.action === 'scanComplete') {
@@ -120,6 +128,7 @@ class LinkflowUI {
     });
   }
 
+  // initiate scan process
   async scan(action) {
     this.showLoading();
     try {
@@ -128,12 +137,10 @@ class LinkflowUI {
         currentWindow: true,
       });
 
-      // Check if we have a valid tab
       if (!tab || !tab.id) {
         throw new Error('No active tab found');
       }
 
-      // Check if we can inject into this tab
       if (!tab.url.startsWith('http')) {
         throw new Error('Cannot scan links on this page');
       }
@@ -147,12 +154,13 @@ class LinkflowUI {
     }
   }
 
+  // inject content script if not already present
   async injectContentScript(tabId) {
     return new Promise((resolve) => {
       chrome.tabs.sendMessage(tabId, { action: 'ping' }, (response) => {
         if (chrome.runtime.lastError) {
           chrome.scripting.executeScript(
-            { target: { tabId }, files: ['contentScript.js'] },
+            { target: { tabId }, files: ['src/scripts/contentScript.js'] },
             resolve
           );
         } else {
@@ -162,28 +170,34 @@ class LinkflowUI {
     });
   }
 
+  // show loading spinner
   showLoading() {
     this.elements.loadingSpinner.classList.remove('hidden');
     this.elements.resultCount.textContent = '';
   }
 
+  // hide loading spinner
   hideLoading() {
     this.elements.loadingSpinner.classList.add('hidden');
   }
 
+  // update results display with count and type
   updateResults(count, type) {
-    const messages = {
-      all: `Found ${count} total links`,
-      empty: `Found ${count} empty or invalid links`,
-      unique: `Found ${count} unique links`,
-    };
-    this.elements.resultCount.textContent = messages[type];
+    // create consistent message format
+    const message =
+      count === 1 ? `Found 1 matching link` : `Found ${count} matching links`;
+
+    this.elements.resultCount.textContent = message;
     this.elements.resultCount.style.cursor = count > 0 ? 'pointer' : 'default';
     this.elements.resultCount.classList.toggle('clickable', count > 0);
+
+    // add mono font class for consistent styling
+    this.elements.resultCount.classList.add('mono-text');
   }
 
+  // handle active button state
   setActiveButton(button, activeClass) {
-    // Remove active class from previous button
+    // remove active class from previous button
     if (this.activeButton) {
       const previousClass = this.activeButton.className
         .split(' ')
@@ -193,15 +207,17 @@ class LinkflowUI {
       }
     }
 
-    // Set new active button
+    // set new active button
     button.classList.add(activeClass);
     this.activeButton = button;
   }
 
+  // display error message
   showError(message) {
     this.elements.resultCount.textContent = `Error: ${message}`;
     this.elements.resultCount.style.color = 'hsl(var(--destructive))';
   }
 }
 
+// initialize ui when dom is ready
 document.addEventListener('DOMContentLoaded', () => new LinkflowUI());
