@@ -6,20 +6,23 @@ class LinkScanner {
 
   setupMessageListener() {
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-      this.clearHighlights();
-
       switch (request.action) {
         case 'scanAllLinks':
+          this.clearHighlights();
           this.highlightAllLinks();
           break;
         case 'scanEmptyLinks':
+          this.clearHighlights();
           this.highlightEmptyLinks();
           break;
         case 'scanUniqueLinks':
+          this.clearHighlights();
           this.highlightUniqueLinks();
           break;
+        case 'highlightSpecificLink':
+          this.highlightSpecificLink(request.linkId);
+          break;
       }
-
       sendResponse(true);
       return true;
     });
@@ -44,6 +47,25 @@ class LinkScanner {
       .linkflow-highlight:hover {
         filter: brightness(1.1);
       }
+      
+      .linkflow-highlight-pulse {
+        animation: linkflowPulse 1s ease-out;
+      }
+      
+      @keyframes linkflowPulse {
+        0% {
+          transform: scale(1);
+          box-shadow: 0 0 0 0 var(--outline-color);
+        }
+        50% {
+          transform: scale(1.05);
+          box-shadow: 0 0 0 10px transparent;
+        }
+        100% {
+          transform: scale(1);
+          box-shadow: 0 0 0 0 transparent;
+        }
+      }
     `;
     document.head.appendChild(style);
   }
@@ -64,18 +86,24 @@ class LinkScanner {
 
   highlightAllLinks() {
     const links = document.querySelectorAll('a');
-    links.forEach((link) => {
+    const hrefs = [];
+
+    links.forEach((link, index) => {
+      const linkId = `linkflow-${Date.now()}-${index}`;
+      link.dataset.linkflowId = linkId;
       this.highlightElement(
         link,
-        'rgba(34, 197, 94, 0.2)', // Light green
-        'rgba(34, 197, 94, 0.8)' // Dark green
+        'rgba(34, 197, 94, 0.2)',
+        'rgba(34, 197, 94, 0.8)'
       );
+      hrefs.push({ href: link.href, id: linkId });
     });
 
     chrome.runtime.sendMessage({
       action: 'scanComplete',
       count: links.length,
       type: 'all',
+      links: hrefs,
     });
   }
 
@@ -83,8 +111,9 @@ class LinkScanner {
     const links = document.querySelectorAll('a');
     const currentUrl = window.location.href.split('#')[0];
     let emptyCount = 0;
+    const emptyHrefs = [];
 
-    links.forEach((link) => {
+    links.forEach((link, index) => {
       const href = link.getAttribute('href');
       const isEmptyOrInvalid =
         !href ||
@@ -94,12 +123,15 @@ class LinkScanner {
         href.startsWith('#');
 
       if (isEmptyOrInvalid) {
+        const linkId = `linkflow-${Date.now()}-${index}`;
+        link.dataset.linkflowId = linkId;
         this.highlightElement(
           link,
-          'rgba(239, 68, 68, 0.2)', // Light red
-          'rgba(239, 68, 68, 0.8)' // Dark red
+          'rgba(239, 68, 68, 0.2)',
+          'rgba(239, 68, 68, 0.8)'
         );
         emptyCount++;
+        emptyHrefs.push({ href: href || '(empty)', id: linkId });
       }
     });
 
@@ -107,24 +139,29 @@ class LinkScanner {
       action: 'scanComplete',
       count: emptyCount,
       type: 'empty',
+      links: emptyHrefs,
     });
   }
 
   highlightUniqueLinks() {
     const links = document.querySelectorAll('a');
     const uniqueUrls = new Set();
+    const uniqueHrefs = [];
     let uniqueCount = 0;
 
-    links.forEach((link) => {
+    links.forEach((link, index) => {
       const href = link.href;
       if (!uniqueUrls.has(href)) {
+        const linkId = `linkflow-${Date.now()}-${index}`;
+        link.dataset.linkflowId = linkId;
         uniqueUrls.add(href);
         this.highlightElement(
           link,
-          'rgba(147, 51, 234, 0.2)', // Light purple
-          'rgba(147, 51, 234, 0.8)' // Dark purple
+          'rgba(147, 51, 234, 0.2)',
+          'rgba(147, 51, 234, 0.8)'
         );
         uniqueCount++;
+        uniqueHrefs.push({ href, id: linkId });
       }
     });
 
@@ -132,7 +169,18 @@ class LinkScanner {
       action: 'scanComplete',
       count: uniqueCount,
       type: 'unique',
+      links: uniqueHrefs,
     });
+  }
+
+  highlightSpecificLink(linkId) {
+    const link = document.querySelector(`[data-linkflow-id="${linkId}"]`);
+    if (link) {
+      link.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      link.classList.remove('linkflow-highlight-pulse');
+      void link.offsetWidth;
+      link.classList.add('linkflow-highlight-pulse');
+    }
   }
 }
 

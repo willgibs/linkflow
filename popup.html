@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="popup.css" />
   </head>
   <body>
-    <div class="container">
+    <div class="container" id="main-container">
       <img src="logo.svg" alt="Linkflow" class="logo" />
       <h1>Linkflow</h1>
 
@@ -24,7 +24,14 @@
       </div>
 
       <div id="loading-spinner" class="spinner hidden"></div>
-      <div id="result-count" class="result-text"></div>
+      <a href="#" id="result-count" class="result-text"></a>
+    </div>
+
+    <div class="container hidden" id="list-container">
+      <button id="back-button" class="btn btn-secondary">
+        <span>← Back</span>
+      </button>
+      <div class="links-list" id="links-list"></div>
     </div>
     <script src="popup.js"></script>
   </body>

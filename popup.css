@@ -130,3 +130,75 @@ h1 {
     transform: scale(1);
   }
 }
+
+.links-list {
+  width: 100%;
+  max-height: 300px;
+  overflow-y: auto;
+  margin-top: 1rem;
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--muted)) transparent;
+}
+
+.links-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.links-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.links-list::-webkit-scrollbar-thumb {
+  background-color: hsl(var(--muted));
+  border-radius: 3px;
+}
+
+.link-item {
+  padding: 0.75rem;
+  border-radius: var(--radius);
+  background-color: hsl(var(--secondary));
+  margin-bottom: 0.5rem;
+  font-size: 0.75rem;
+  word-break: break-all;
+  color: hsl(var(--secondary-foreground));
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.link-item:hover {
+  background-color: hsl(var(--accent));
+  border-color: hsl(var(--muted));
+}
+
+.link-item-active {
+  animation: itemPulse 0.5s ease-out;
+}
+
+@keyframes itemPulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.98);
+    background-color: hsl(var(--accent));
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.result-text.clickable {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.result-text.clickable:hover {
+  opacity: 0.8;
+}
+
+#back-button {
+  margin-bottom: 1rem;
+  width: auto;
+  align-self: flex-start; /* Align back button to the left */
+}
