@@ -31,12 +31,34 @@ class LinkScanner {
   addStyles() {
     const style = document.createElement('style');
     style.textContent = `
+      /* Light theme colors */
+      :root {
+        --linkflow-all-bg: rgba(34, 197, 94, 0.15);
+        --linkflow-all-outline: rgba(34, 197, 94, 0.7);
+        --linkflow-empty-bg: rgba(239, 68, 68, 0.15);
+        --linkflow-empty-outline: rgba(239, 68, 68, 0.7);
+        --linkflow-unique-bg: rgba(147, 51, 234, 0.15);
+        --linkflow-unique-outline: rgba(147, 51, 234, 0.7);
+      }
+
+      /* Dark theme adjustments */
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --linkflow-all-bg: rgba(34, 197, 94, 0.25);
+          --linkflow-all-outline: rgba(34, 197, 94, 0.8);
+          --linkflow-empty-bg: rgba(239, 68, 68, 0.25);
+          --linkflow-empty-outline: rgba(239, 68, 68, 0.8);
+          --linkflow-unique-bg: rgba(147, 51, 234, 0.25);
+          --linkflow-unique-outline: rgba(147, 51, 234, 0.8);
+        }
+      }
+
       .linkflow-highlight {
-        background-color: var(--highlight-color, rgba(34, 197, 94, 0.2)) !important;
-        outline: 2px solid var(--outline-color, rgba(34, 197, 94, 0.8)) !important;
+        background-color: var(--highlight-color) !important;
+        outline: 2px solid var(--outline-color) !important;
         border-radius: 4px !important;
         transition: all 0.3s ease !important;
-        color: white !important;
+        color: var(--text-color, white) !important;
         text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
       }
       
@@ -93,8 +115,8 @@ class LinkScanner {
       link.dataset.linkflowId = linkId;
       this.highlightElement(
         link,
-        'rgba(34, 197, 94, 0.2)',
-        'rgba(34, 197, 94, 0.8)'
+        'var(--linkflow-all-bg)',
+        'var(--linkflow-all-outline)'
       );
       hrefs.push({ href: link.href, id: linkId });
     });
@@ -127,8 +149,8 @@ class LinkScanner {
         link.dataset.linkflowId = linkId;
         this.highlightElement(
           link,
-          'rgba(239, 68, 68, 0.2)',
-          'rgba(239, 68, 68, 0.8)'
+          'var(--linkflow-empty-bg)',
+          'var(--linkflow-empty-outline)'
         );
         emptyCount++;
         emptyHrefs.push({ href: href || '(empty)', id: linkId });
@@ -157,8 +179,8 @@ class LinkScanner {
         uniqueUrls.add(href);
         this.highlightElement(
           link,
-          'rgba(147, 51, 234, 0.2)',
-          'rgba(147, 51, 234, 0.8)'
+          'var(--linkflow-unique-bg)',
+          'var(--linkflow-unique-outline)'
         );
         uniqueCount++;
         uniqueHrefs.push({ href, id: linkId });
