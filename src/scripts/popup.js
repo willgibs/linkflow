@@ -6,6 +6,7 @@ class LinkflowUI {
     this.setupMessageListener();
     this.activeButton = null;
     this.currentLinks = [];
+    this.scanType = null;
   }
 
   // cache dom elements for better performance
@@ -20,6 +21,7 @@ class LinkflowUI {
       listContainer: document.getElementById('list-container'),
       linksList: document.getElementById('links-list'),
       backButton: document.getElementById('back-button'),
+      exportCsv: document.getElementById('export-csv'),
     };
   }
 
@@ -31,22 +33,26 @@ class LinkflowUI {
         button: 'scanAllBtn',
         action: 'scanAllLinks',
         activeClass: 'btn-active-all',
+        type: 'all',
       },
       {
         button: 'scanEmptyBtn',
         action: 'scanEmptyLinks',
         activeClass: 'btn-active-empty',
+        type: 'empty',
       },
       {
         button: 'scanUniqueBtn',
         action: 'scanUniqueLinks',
         activeClass: 'btn-active-unique',
+        type: 'unique',
       },
     ];
 
     // attach click handlers to scan buttons
-    scanActions.forEach(({ button, action, activeClass }) => {
+    scanActions.forEach(({ button, action, activeClass, type }) => {
       this.elements[button].addEventListener('click', () => {
+        this.scanType = type;
         this.setActiveButton(this.elements[button], activeClass);
         this.scan(action);
       });
@@ -64,6 +70,9 @@ class LinkflowUI {
     this.elements.backButton.addEventListener('click', () => {
       this.showMainView();
     });
+
+    // handle export CSV button
+    this.elements.exportCsv.addEventListener('click', () => this.exportToCsv());
   }
 
   // display the list of found links
@@ -216,6 +225,42 @@ class LinkflowUI {
   showError(message) {
     this.elements.resultCount.textContent = `Error: ${message}`;
     this.elements.resultCount.style.color = 'hsl(var(--destructive))';
+  }
+
+  // export CSV
+  async exportToCsv() {
+    try {
+      const [tab] = await chrome.tabs.query({
+        active: true,
+        currentWindow: true,
+      });
+      const hostname = new URL(tab.url).hostname;
+      const timestamp = new Date().toISOString().split('T')[0];
+      const filename = `links_${this.scanType}_${hostname}_${timestamp}.csv`;
+
+      // Create CSV content
+      const csvContent = [
+        ['URL'], // CSV header
+        ...this.currentLinks.map((link) => [link.href]),
+      ]
+        .map((row) => row.join(','))
+        .join('\n');
+
+      // Create blob and download
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', filename);
+      link.style.display = 'none';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error exporting CSV:', error);
+      this.showError('Failed to export CSV');
+    }
   }
 }
 
