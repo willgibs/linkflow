@@ -42,6 +42,7 @@ h1 {
 }
 
 .btn {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -53,6 +54,7 @@ h1 {
   cursor: pointer;
   transition: all 0.2s ease;
   width: 100%;
+  outline: 2px solid transparent;
 }
 
 .btn-primary {
@@ -96,4 +98,35 @@ h1 {
 /* Utility classes */
 .hidden {
   display: none;
+}
+
+/* Button active states */
+.btn-active-all {
+  background-color: rgba(34, 197, 94, 0.2) !important;
+  outline: 2px solid rgba(34, 197, 94, 0.8) !important;
+  animation: buttonPulse 2s infinite;
+}
+
+.btn-active-empty {
+  background-color: rgba(239, 68, 68, 0.2) !important;
+  outline: 2px solid rgba(239, 68, 68, 0.8) !important;
+  animation: buttonPulse 2s infinite;
+}
+
+.btn-active-unique {
+  background-color: rgba(147, 51, 234, 0.2) !important;
+  outline: 2px solid rgba(147, 51, 234, 0.8) !important;
+  animation: buttonPulse 2s infinite;
+}
+
+@keyframes buttonPulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
 }

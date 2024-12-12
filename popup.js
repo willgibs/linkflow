@@ -4,6 +4,7 @@ class LinkflowUI {
     this.elements = this.getElements();
     this.setupEventListeners();
     this.setupMessageListener();
+    this.activeButton = null;
   }
 
   getElements() {
@@ -17,15 +18,46 @@ class LinkflowUI {
   }
 
   setupEventListeners() {
-    this.elements.scanAllBtn.addEventListener('click', () =>
-      this.scan('scanAllLinks')
-    );
-    this.elements.scanEmptyBtn.addEventListener('click', () =>
-      this.scan('scanEmptyLinks')
-    );
-    this.elements.scanUniqueBtn.addEventListener('click', () =>
-      this.scan('scanUniqueLinks')
-    );
+    const scanActions = [
+      {
+        button: 'scanAllBtn',
+        action: 'scanAllLinks',
+        activeClass: 'btn-active-all',
+      },
+      {
+        button: 'scanEmptyBtn',
+        action: 'scanEmptyLinks',
+        activeClass: 'btn-active-empty',
+      },
+      {
+        button: 'scanUniqueBtn',
+        action: 'scanUniqueLinks',
+        activeClass: 'btn-active-unique',
+      },
+    ];
+
+    scanActions.forEach(({ button, action, activeClass }) => {
+      this.elements[button].addEventListener('click', () => {
+        this.setActiveButton(this.elements[button], activeClass);
+        this.scan(action);
+      });
+    });
+  }
+
+  setActiveButton(button, activeClass) {
+    // Remove active class from previous button
+    if (this.activeButton) {
+      const previousClass = this.activeButton.className
+        .split(' ')
+        .find((cls) => cls.startsWith('btn-active-'));
+      if (previousClass) {
+        this.activeButton.classList.remove(previousClass);
+      }
+    }
+
+    // Set new active button
+    button.classList.add(activeClass);
+    this.activeButton = button;
   }
 
   setupMessageListener() {
