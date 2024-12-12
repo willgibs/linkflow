@@ -49,10 +49,4 @@ Customize Linkflow by editing:
 - `contentScript.js` for webpage interaction.
 - `manifest.json` for permissions and configuration.
 
-## Build and Package
-
-1. Update and test all files.
-2. Create a ZIP of the extension files.
-3. Follow [Chrome Web Store guidelines](https://developer.chrome.com/docs/webstore/publish/) for submission.
-
 Contributions and customizations are welcome!
