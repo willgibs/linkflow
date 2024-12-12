@@ -9,7 +9,13 @@
   <body>
     <div class="container" id="main-container">
       <div class="header-row">
-        <img src="assets/icons/logo.svg" alt="Linkflow" class="logo" />
+        <a
+          href="https://github.com/willgibs/linkflow"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img src="assets/icons/logo.svg" alt="Linkflow" class="logo" />
+        </a>
         <h1>Linkflow</h1>
         <button
           id="theme-toggle"
@@ -20,7 +26,7 @@
         </button>
       </div>
 
-      <div class="buttons">
+      <section class="scan-section">
         <button id="scan-all" class="btn btn-primary">
           <span>Scan All Links</span>
         </button>
@@ -30,7 +36,7 @@
         <button id="scan-unique" class="btn btn-secondary">
           <span>Find Unique Links</span>
         </button>
-      </div>
+      </section>
 
       <div id="loading-spinner" class="spinner hidden"></div>
       <a href="#" id="result-count" class="result-text"></a>

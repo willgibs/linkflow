@@ -65,7 +65,7 @@
 /* Container styles */
 body {
   width: 300px;
-  min-height: 400px;
+  height: fit-content;
   margin: 0;
   padding: 0;
   background-color: hsl(var(--background));
@@ -83,7 +83,7 @@ body {
   width: 100%;
   box-sizing: border-box;
   background-color: hsl(var(--background));
-  border-bottom: 1px solid hsl(var(--border));
+  min-height: fit-content;
 }
 
 /* Logo and title */
@@ -135,15 +135,17 @@ h1 {
   background-color: hsl(var(--muted));
 }
 
-.btn-primary {
-  background-color: hsl(var(--primary));
-  color: hsl(var(--primary-foreground));
-  border: none;
-}
-
-.btn-primary:hover {
-  opacity: 0.9;
-}
+/* Remove these styles
+  .btn-primary {
+    background-color: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    border: none;
+  }
+  
+  .btn-primary:hover {
+    opacity: 0.9;
+  }
+  */
 
 /* Loading spinner */
 .spinner {
@@ -183,9 +185,9 @@ h1 {
 /* Links list */
 .links-list {
   width: 100%;
-  max-height: 350px;
+  max-height: 400px;
   overflow-y: auto;
-  margin-top: 1rem;
+  margin-top: 0;
   padding: 0 0.5rem;
   display: flex;
   flex-direction: column;
@@ -264,7 +266,43 @@ h1 {
   border: none;
 }
 
+/* Light theme hover state for active buttons */
+[data-theme='light'] .btn-active-all:hover,
+[data-theme='light'] .btn-active-empty:hover,
+[data-theme='light'] .btn-active-unique:hover {
+  background-color: hsl(var(--primary) / 0.9);
+  color: hsl(var(--primary-foreground));
+}
+
+/* Dark theme hover state for active buttons */
+[data-theme='dark'] .btn-active-all:hover,
+[data-theme='dark'] .btn-active-empty:hover,
+[data-theme='dark'] .btn-active-unique:hover {
+  background-color: hsl(var(--primary) / 0.9);
+  color: hsl(var(--primary-foreground));
+}
+
 /* Utility */
 .hidden {
   display: none;
+}
+
+.button-row {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.button-row .btn {
+  margin: 0;
+  flex: 1;
+  height: 2rem; /* Match the back button height */
+}
+
+.scan-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem; /* 8px */
+  width: 100%;
 }
