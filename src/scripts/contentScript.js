@@ -1,9 +1,11 @@
+// linkscanner class - handles all webpage link interactions and highlighting
 class LinkScanner {
   constructor() {
     this.setupMessageListener();
     this.addStyles();
   }
 
+  // listen for messages from the popup
   setupMessageListener() {
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       switch (request.action) {
@@ -28,10 +30,11 @@ class LinkScanner {
     });
   }
 
+  // inject required styles for link highlighting
   addStyles() {
     const style = document.createElement('style');
     style.textContent = `
-      /* Light theme colors */
+      /* theme-aware variables for link highlighting */
       :root {
         --linkflow-all-bg: rgba(34, 197, 94, 0.15);
         --linkflow-all-outline: rgba(34, 197, 94, 0.7);
@@ -41,7 +44,7 @@ class LinkScanner {
         --linkflow-unique-outline: rgba(147, 51, 234, 0.7);
       }
 
-      /* Dark theme adjustments */
+      /* adjust highlight colors for dark mode */
       @media (prefers-color-scheme: dark) {
         :root {
           --linkflow-all-bg: rgba(34, 197, 94, 0.25);
@@ -53,27 +56,32 @@ class LinkScanner {
         }
       }
 
+      /* base highlight styles */
       .linkflow-highlight {
         background-color: var(--highlight-color) !important;
         outline: 2px solid var(--outline-color) !important;
         border-radius: 4px !important;
-        transition: all 0.3s ease !important;
+        transition: all 0.15s ease !important;
         color: var(--text-color, white) !important;
         text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
       }
       
+      /* ensure all child elements inherit text color */
       .linkflow-highlight * {
         color: white !important;
       }
       
+      /* hover effect for highlighted links */
       .linkflow-highlight:hover {
         filter: brightness(1.1);
       }
       
+      /* pulse animation for selected links */
       .linkflow-highlight-pulse {
-        animation: linkflowPulse 1s ease-out;
+        animation: linkflowPulse 0.3s ease-out;
       }
       
+      /* pulse animation keyframes */
       @keyframes linkflowPulse {
         0% {
           transform: scale(1);
@@ -92,6 +100,7 @@ class LinkScanner {
     document.head.appendChild(style);
   }
 
+  // remove all link highlights
   clearHighlights() {
     document.querySelectorAll('.linkflow-highlight').forEach((el) => {
       el.classList.remove('linkflow-highlight');
@@ -100,12 +109,14 @@ class LinkScanner {
     });
   }
 
+  // apply highlight styles to an element
   highlightElement(element, highlightColor, outlineColor) {
     element.classList.add('linkflow-highlight');
     element.style.setProperty('--highlight-color', highlightColor);
     element.style.setProperty('--outline-color', outlineColor);
   }
 
+  // scan and highlight all links on the page
   highlightAllLinks() {
     const links = document.querySelectorAll('a');
     const hrefs = [];
@@ -129,6 +140,7 @@ class LinkScanner {
     });
   }
 
+  // scan and highlight empty or invalid links
   highlightEmptyLinks() {
     const links = document.querySelectorAll('a');
     const currentUrl = window.location.href.split('#')[0];
@@ -165,6 +177,7 @@ class LinkScanner {
     });
   }
 
+  // scan and highlight unique links
   highlightUniqueLinks() {
     const links = document.querySelectorAll('a');
     const uniqueUrls = new Set();
@@ -195,15 +208,17 @@ class LinkScanner {
     });
   }
 
+  // highlight and scroll to a specific link
   highlightSpecificLink(linkId) {
     const link = document.querySelector(`[data-linkflow-id="${linkId}"]`);
     if (link) {
       link.scrollIntoView({ behavior: 'smooth', block: 'center' });
       link.classList.remove('linkflow-highlight-pulse');
-      void link.offsetWidth;
+      void link.offsetWidth; // force reflow for animation
       link.classList.add('linkflow-highlight-pulse');
     }
   }
 }
 
+// initialize scanner when script loads
 new LinkScanner();
