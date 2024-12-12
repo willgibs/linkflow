@@ -1,11 +1,10 @@
 {
   "manifest_version": 3,
   "name": "Linkflow",
-  "version": "2.1.0",
-  "description": "Instantly analyze all links on a webpage, scan for broken links, or export all data with a single click.",
+  "version": "2.2.0",
+  "description": "Instantly analyze all links on a webpage, scan for empty links, and identify unique links.",
   "author": "Will Gibson",
-  "permissions": ["tabs", "scripting"],
-  "host_permissions": ["*://*/*"],
+  "permissions": ["activeTab", "scripting"],
   "action": {
     "default_icon": "icon.png",
     "default_popup": "popup.html",
