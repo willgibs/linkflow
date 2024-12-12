@@ -77,6 +77,11 @@ body {
   align-items: center;
   width: 100%;
   box-sizing: border-box;
+  background: linear-gradient(
+    to bottom,
+    hsl(var(--background)),
+    hsl(var(--background) / 0.98)
+  );
 }
 
 /* Logo and title */
@@ -121,10 +126,14 @@ h1 {
   color: hsl(var(--secondary-foreground)) !important;
   letter-spacing: -0.01em;
   font-family: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 0 0 1px hsl(var(--muted) / 0.1);
 }
 
 .btn:active {
   transform: scale(0.98);
+  background-color: hsl(var(--secondary) / 0.8) !important;
 }
 
 .btn-primary {
@@ -153,17 +162,45 @@ h1 {
   border-top-color: hsl(var(--primary));
   animation: spin 0.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
   margin: 1rem 0;
+  box-shadow: 0 0 0 3px hsl(var(--background)),
+    0 0 0 4px hsl(var(--muted) / 0.1);
 }
 
 /* Results text */
 .result-text {
-  font-size: 0.9375rem;
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.8125rem;
   color: hsl(var(--foreground) / 0.8);
   text-align: center;
   margin-top: 1rem;
-  animation: fadeIn 0.3s ease;
+  animation: fadeIn 0.2s ease;
   letter-spacing: -0.006em;
-  font-family: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
+  transition: color 0.2s ease, opacity 0.2s ease;
+  opacity: 0;
+  animation: fadeSlideUp 0.3s ease forwards;
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Refined clickable state */
+.result-text.clickable {
+  text-decoration: none;
+  cursor: pointer;
+  color: hsl(var(--foreground));
+}
+
+.result-text.clickable:hover {
+  color: hsl(var(--primary));
+  opacity: 1;
 }
 
 /* Utility classes */
@@ -208,12 +245,26 @@ h1 {
   max-height: 350px; /* Slightly taller */
   overflow-y: auto;
   margin-top: 1.25rem;
-  padding: 0.25rem;
+  padding: 0.25rem 0.5rem;
   scrollbar-width: thin;
   scrollbar-color: hsl(var(--muted)) transparent;
   display: flex;
   flex-direction: column;
   gap: 0.5rem; /* Consistent spacing */
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    black 5%,
+    black 95%,
+    transparent
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    black 5%,
+    black 95%,
+    transparent
+  );
 }
 
 .links-list::-webkit-scrollbar {
@@ -249,6 +300,7 @@ h1 {
   margin: 0; /* Remove margin, using gap instead */
   letter-spacing: -0.006em;
   font-family: 'Geist Mono', monospace;
+  box-shadow: 0 1px 2px hsl(var(--muted) / 0.05);
 }
 
 /* Subtle separator between items */
@@ -306,6 +358,8 @@ h1 {
   font-weight: 500;
   transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
   font-family: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 #back-button:hover {
@@ -327,12 +381,15 @@ h1 {
   align-items: center;
   margin-bottom: 1.75rem;
   padding: 0.25rem 0.75rem;
-  background: hsl(var(--background));
+  background: linear-gradient(
+    to bottom,
+    hsl(var(--background)) 50%,
+    hsl(var(--background) / 0.9)
+  );
   position: sticky;
   top: 0;
   z-index: 10;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid hsl(var(--muted) / 0.1);
 }
 
 .theme-toggle {
@@ -350,11 +407,12 @@ h1 {
   height: 36px;
   border-radius: 50%;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: inset 0 0 0 1px hsl(var(--muted) / 0.1);
 }
 
 .theme-toggle:hover {
   background-color: hsl(var(--secondary));
-  transition-duration: 0.1s;
+  box-shadow: inset 0 0 0 1px hsl(var(--muted) / 0.2);
 }
 
 .theme-toggle:active {

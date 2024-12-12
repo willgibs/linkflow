@@ -174,12 +174,20 @@ class LinkflowUI {
   updateResults(count, type) {
     const messages = {
       all: `Found ${count} total links`,
-      empty: `Found ${count} empty or invalid links`,
+      empty: `Found ${count} empty links`,
       unique: `Found ${count} unique links`,
     };
-    this.elements.resultCount.textContent = messages[type];
+
+    // Create consistent message format
+    const message =
+      count === 1 ? `Found 1 matching link` : `Found ${count} matching links`;
+
+    this.elements.resultCount.textContent = message;
     this.elements.resultCount.style.cursor = count > 0 ? 'pointer' : 'default';
     this.elements.resultCount.classList.toggle('clickable', count > 0);
+
+    // Add mono font class
+    this.elements.resultCount.classList.add('mono-text');
   }
 
   setActiveButton(button, activeClass) {
